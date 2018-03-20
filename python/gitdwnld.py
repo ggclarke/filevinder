@@ -143,7 +143,7 @@ def _clone_repo(repo, res, lf):
 
     _log('"uri":"{}",'           .format(repo["html_url"]), lf)
 
-    _log('"time-start":"{}"'   .format(time.strftime("%Y-%m-%d %H:%M")), lf)
+    _log('"time-start":"{}",'   .format(time.strftime("%Y-%m-%d %H:%M")), lf)
 
     p = cmd.run_bg(_clone_cmd(repo), shell=True)
     _monitor(p, lf)
