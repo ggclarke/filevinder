@@ -1,0 +1,3 @@
+﻿foobar
+foobar£
+foobar£🜁

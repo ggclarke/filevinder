@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <suppress checks="MagicNumber" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+    <suppress checks="JavadocMethod" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+    <suppress checks="JavadocType" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+    <suppress checks="JavadocVariable" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+    <suppress checks="JavadocStyle" files=".*[\\/]src[\\/](test|it)[\\/]"/>
+    <suppress files="\.xml" checks="[a-zA-Z0-9]*"/>
+    <suppress checks="JavadocMethod" files="org.filevinder.ui.model.Model.java"/>
+
+
+</suppressions>

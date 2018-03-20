@@ -1,0 +1,3 @@
+Make file type optional - the default is *
+Make location optional when an index is present - default is *
+Add surce repo crawler
