@@ -1,5 +1,6 @@
 from tempfile import TemporaryFile
 import subprocess
+from subprocess import PIPE
 import os
 import time
 import sys
@@ -21,6 +22,23 @@ def run_bg_log(log_path, *args):
     cmd_and_pipe = _gen_cmd_with_log(log_path, *args)
     print('Running command:  ' + cmd_and_pipe)
     return subprocess.Popen(cmd_and_pipe, shell=True)  # Non-blocking, the shell does the IO redirection to file and returns a ref
+
+
+def run_bg(*args, **kwargs):
+    """
+    Runs, then returns process object
+    The expansion (*) operator is used when passing sequence objects to
+    prevent nesting a sequence
+    """
+    print('run: args:' + str(args))
+
+    if kwargs.get('shell') is True:
+        p = subprocess.Popen(' '.join(args), **kwargs)
+    else:
+        p = subprocess.Popen(args, **kwargs)
+
+    p.poll()  # This is a non blocking call
+    return p
 
 
 def run(*args, **kwargs):

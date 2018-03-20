@@ -85,7 +85,7 @@ def _get_last_id(file_path):
 
 
 def _wait(start):
-    min = 600
+    min = 1800
     hour = 3600
     delta = time.time() - start
     zzz = hour - int(delta)
@@ -127,7 +127,7 @@ def _clone_cmd(repo):
     if(os.path.isdir(clone_folder)):
         clone_folder = clone_folder + "_" + str(int(time.time()))
 
-    cmd = "git clone {}.git {}".format(clone_url, clone_folder)
+    cmd = "git clone {}.git {} -v".format(clone_url, clone_folder)
     return cmd
 
 
@@ -143,8 +143,20 @@ def _clone_repo(repo, res, lf):
 
     _log('"uri":"{}",'           .format(repo["html_url"]), lf)
 
-    # Dir names are not unique, if dir already exists clone to alt
-    os.system(_clone_cmd(repo))
+    _log('"time-start":"{}"'   .format(time.strftime("%Y-%m-%d %H:%M")), lf)
+
+    p = cmd.run_bg(_clone_cmd(repo), shell=True)
+    _monitor(p, lf)
+
+
+def _monitor(p, lf):
+    max_wait = 3600
+    start = time.time()
+    while(cmd.is_running(p)):
+        delta = (int)(time.time() - start)
+        if (delta > max_wait):
+            _log('"max_wait":"exceeded"', lf)
+        time.sleep(5)
 
 
 if __name__ == "__main__":
