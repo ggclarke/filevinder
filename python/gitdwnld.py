@@ -155,8 +155,10 @@ def _monitor(p, lf):
     while(cmd.is_running(p)):
         delta = (int)(time.time() - start)
         if (delta > max_wait):
-            _log('"max_wait":"exceeded"', lf)
-        time.sleep(5)
+            _log('"max_wait_err":"Exceeded max_wait, killing process {}",'.format(p.pid), lf)
+            p.kill()
+            break
+        time.sleep(3)
 
 
 if __name__ == "__main__":
