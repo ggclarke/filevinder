@@ -127,7 +127,7 @@ def _clone_cmd(repo):
     if(os.path.isdir(clone_folder)):
         clone_folder = clone_folder + "_" + str(int(time.time()))
 
-    cmd = "git clone {}.git {} -v".format(clone_url, clone_folder)
+    cmd = "git clone --depth 1 {}.git {}  -v".format(clone_url, clone_folder)
     return cmd
 
 
