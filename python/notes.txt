@@ -1,0 +1,1 @@
+TO defrag the ntfs mount: fsck -t ntfs --kerneldefrag /dev/sda2
