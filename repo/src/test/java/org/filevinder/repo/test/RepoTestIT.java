@@ -10,6 +10,7 @@ import static java.lang.System.out;
 import org.filevinder.repo.RepoManager;
 import org.filevinder.repo.RepoManagerFactory;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -18,6 +19,7 @@ import org.junit.Test;
  */
 public class RepoTestIT {
 
+    @Ignore
     @Test
     public final void testDownloadingAGitRepo() {
         String tmp = System.getProperty("java.io.tmpdir") + "/repo";

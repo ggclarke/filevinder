@@ -1,6 +1,8 @@
-Make file type optional - the default is *
-Make location optional when an index is present - default is *
-Add surce repo crawler
+TODO
+
+
+convert to java 10
+Add source repo crawler
 Add max and min size to GUI
 Convert to Gradle
-Use RickTextFX as the text component
+Use codemirror as the text component

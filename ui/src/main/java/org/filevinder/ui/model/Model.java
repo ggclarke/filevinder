@@ -33,7 +33,7 @@ public final class Model {
      * Default values assumed by UI fields.
      */
     public static final String SEARCH_TEXT_DEFAULT = "",
-            SEARCH_LOCATION_DEFAULT = sysDrv(), SEARCH_FILE_TYPES_DEFAULT = "*";
+            SEARCH_LOCATION_DEFAULT = "", SEARCH_FILE_TYPES_DEFAULT = "";
 
     private static final Model SINGLETON = new Model();
     private SimpleStringProperty searchText, searchLocation, searchFileTypes,
