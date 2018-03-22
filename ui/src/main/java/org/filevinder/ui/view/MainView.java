@@ -70,6 +70,9 @@ import org.filevinder.ui.model.SearchResult;
  */
 public final class MainView extends Application {
 
+    private static final int COL_0 = 0, COL_1 = 1;
+    private final int ROW_4 = 4, ROW_3 = 3, ROW_2 = 2, ROW_1 = 1;
+
     @Override
     public void start(final Stage primaryStage) {
         Scene scene = setTheScene(primaryStage);
@@ -87,8 +90,8 @@ public final class MainView extends Application {
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.getStylesheets().add("filevinder.css");
         addMenuBar(primaryStage, scene);
-        addTopRegion(scene);
-        addBottomRegion(scene);
+        addSearchFields(scene);
+        addSearchResults(scene);
         setGlobalEnterKeyEventHandler(root);
         primaryStage.setMinHeight(WINDOW_HEIGHT);
         primaryStage.setMinWidth(WINDOW_WIDTH);
@@ -96,14 +99,14 @@ public final class MainView extends Application {
         return scene;
     }
 
-    private void addTopRegion(final Scene scene) {
+    private void addSearchFields(final Scene scene) {
         GridPane grid = createSearchGrid();
         HBox hbox = new HBox();
         hbox.getChildren().addAll(grid);
         ((VBox) scene.getRoot()).getChildren().add(hbox);
     }
 
-    private void addBottomRegion(final Scene scene) {
+    private void addSearchResults(final Scene scene) {
         TabPane tabPane = makeSearchTabPane(scene);
         ScrollPane fileDetail = makeFileDetailPane(scene);
         HBox hbox = new HBox();
@@ -191,16 +194,15 @@ public final class MainView extends Application {
     }
 
     private GridPane createSearchGrid() {
-        final int row4 = 4, row3 = 3, row2 = 2, row1 = 1;
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(GAP_S);
         grid.setVgap(GAP_S);
         grid.setPadding(new Insets(PAD_M, PAD_M, PAD_M, PAD_M));
-        makeSearchTextInput(grid, row1);
-        makeSearchLocationInput(grid, row2);
-        makeFileTypesInput(grid, row3);
-        grid.add(searchBox(), 0, row4);
+        makeSearchTextInput(grid, ROW_1);
+        makeSearchLocationInput(grid, ROW_2);
+        makeFileTypesInput(grid, ROW_3);
+        grid.add(searchBox(), COL_0, ROW_4);
         return grid;
     }
 
@@ -209,24 +211,23 @@ public final class MainView extends Application {
         tooltip.setText("List multiple file types in CSV form");
         Label fileName = new Label("Search File Types");
         fileName.setTooltip(tooltip);
-        grid.add(fileName, 0, row);
+        grid.add(fileName, COL_0, row);
         TextField searchFileTypes = new TextField();
         searchFileTypes.textProperty().bindBidirectional(Model.getInstance().searchFileTypesProperty());
-        grid.add(searchFileTypes, 1, row);
+        grid.add(searchFileTypes, COL_1, row);
     }
 
     private void makeSearchLocationInput(final GridPane grid, final int row) {
         Tooltip tooltip = new Tooltip();
         tooltip.setText("List multiple locations in CSV form");
-        Label searchInLbl = new Label("Search Location");
-        searchInLbl.setTooltip(tooltip);
-        grid.add(searchInLbl, 0, row);
+        Label searchLocLbl = new Label("Search Location");
+        searchLocLbl.setTooltip(tooltip);
+        grid.add(searchLocLbl, COL_0, row);
         SortedSet<String> prompts = new TreeSet<>();
         prompts.add(""); //TODO: why is this needed?
         AutoCompleteTextField fsAutoCompleter = new AutoCompleteTextField(prompts);
-        //TODO: is this needed?
         fsAutoCompleter.textProperty().bindBidirectional(Model.getInstance().searchLocationProperty());
-        grid.add(fsAutoCompleter, 1, row);
+        grid.add(fsAutoCompleter, COL_1, row);
     }
 
     private void makeSearchTextInput(final GridPane grid, final int row) {
@@ -234,10 +235,10 @@ public final class MainView extends Application {
         tooltip.setText("Supports file matches as a 'glob' pattern");
         Label patternLbl = new Label("Search Text");
         patternLbl.setTooltip(tooltip);
-        grid.add(patternLbl, 0, row);
+        grid.add(patternLbl, COL_0, row);
         TextField searchText = new TextField();
         searchText.textProperty().bindBidirectional(Model.getInstance().searchTextProperty());
-        grid.add(searchText, 1, row);
+        grid.add(searchText, COL_1, row);
     }
 
     private HBox searchBox() {

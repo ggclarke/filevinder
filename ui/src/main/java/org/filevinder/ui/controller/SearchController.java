@@ -87,7 +87,7 @@ public final class SearchController {
     }
 
     private static void cacheSearchDetails(final String rootPath, final String glob, final String pattern) {
-        SearchData searchData = new SearchData(rootPath, glob, pattern);
+        SearchData searchData = new SearchData(pattern, rootPath, glob);
         try {
             SearchHistory.persist(searchData);
         } catch (IOException ioe) {
@@ -102,13 +102,17 @@ public final class SearchController {
     public static void prev() {
         Model model = Model.getInstance();
         int searchPos = model.getPrevSearchPos();
-        System.out.println("'Prev' button pressed (" + searchPos + ")");
         try {
-            setSearchData(searchPos, model);
             int newPos = searchPos + 1;
             if (SearchHistory.isValidPos(newPos)) {
                 model.setPrevSearchPos(newPos);
+            }else{
+                newPos = searchPos;
             }
+
+            setSearchData(newPos, model);
+            System.out.println("'Prev' button pressed (" + newPos + ")");
+
         } catch (IOException ioe) {
             err.println("Could not retrieve previous search.");
             ioe.printStackTrace();
@@ -123,13 +127,18 @@ public final class SearchController {
     public static void next() {
         Model model = Model.getInstance();
         int searchPos = model.getPrevSearchPos();
-        System.out.println("'Next' button pressed (" + searchPos + ")");
+        
         try {
-            setSearchData(searchPos, model);
             int newPos = searchPos - 1;
             if (SearchHistory.isValidPos(newPos)) {
                 model.setPrevSearchPos(newPos);
+            }else{
+                newPos = searchPos;
             }
+            
+            setSearchData(newPos, model);
+            System.out.println("'Next' button pressed (" + newPos + ")");
+
         } catch (IOException ioe) {
             err.println("Could not retrieve previous search.");
             ioe.printStackTrace();
