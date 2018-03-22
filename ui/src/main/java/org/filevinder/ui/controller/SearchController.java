@@ -36,6 +36,7 @@ import org.filevinder.ui.model.SearchResult;
 import org.filevinder.ui.utils.FSUtils;
 import org.filevinder.ui.utils.SearchData;
 import org.filevinder.ui.utils.SearchHistory;
+import static org.filevinder.ui.utils.SearchHistory.isValidPos;
 import org.filevinder.ui.view.ViewException;
 
 /**
@@ -101,17 +102,21 @@ public final class SearchController {
      */
     public static void prev() {
         Model model = Model.getInstance();
+        String search = model.searchTextProperty().getValue();
         int searchPos = model.getPrevSearchPos();
         try {
             int newPos = searchPos + 1;
-            if (SearchHistory.isValidPos(newPos)) {
+
+            if (searchPos == 0 && isEmpty(search)) {
+                newPos = searchPos;
+            } else if (isValidPos(newPos)) {
                 model.setPrevSearchPos(newPos);
-            }else{
+            } else {
                 newPos = searchPos;
             }
 
             setSearchData(newPos, model);
-            System.out.println("'Prev' button pressed (" + newPos + ")");
+            out.println("'Prev' button pressed (" + newPos + ")");
 
         } catch (IOException ioe) {
             err.println("Could not retrieve previous search.");
@@ -121,23 +126,27 @@ public final class SearchController {
         }
     }
 
+    private static boolean isEmpty(String search) {
+        return search == null || search.length() == 0;
+    }
+
     /**
      * Action that gets invoked when the search button is pressed.
      */
     public static void next() {
         Model model = Model.getInstance();
         int searchPos = model.getPrevSearchPos();
-        
+
         try {
             int newPos = searchPos - 1;
             if (SearchHistory.isValidPos(newPos)) {
                 model.setPrevSearchPos(newPos);
-            }else{
+            } else {
                 newPos = searchPos;
             }
-            
+
             setSearchData(newPos, model);
-            System.out.println("'Next' button pressed (" + newPos + ")");
+            out.println("'Next' button pressed (" + newPos + ")");
 
         } catch (IOException ioe) {
             err.println("Could not retrieve previous search.");
@@ -151,7 +160,7 @@ public final class SearchController {
      * Action that gets invoked when the search button is pressed.
      */
     public static void clear() {
-        System.out.println("'Clear' button pressed");
+        out.println("'Clear' button pressed");
         Model model = Model.getInstance();
         model.searchLocationProperty().setValue(SEARCH_LOCATION_DEFAULT);
         model.searchFileTypesProperty().setValue(SEARCH_FILE_TYPES_DEFAULT);

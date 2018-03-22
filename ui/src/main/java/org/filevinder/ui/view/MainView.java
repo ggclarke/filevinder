@@ -21,7 +21,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -48,19 +47,20 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
 import static org.filevinder.ui.Constants.GAP_S;
 import static org.filevinder.ui.Constants.GAP_XS;
 import static org.filevinder.ui.Constants.PAD_M;
-import static org.filevinder.ui.Constants.TEXT_AREA_MIN_WIDTH;
 import static org.filevinder.ui.Constants.WINDOW_HEIGHT;
 import static org.filevinder.ui.Constants.WINDOW_WIDTH;
 import static org.filevinder.ui.controller.SearchController.clear;
 import static org.filevinder.ui.controller.SearchController.next;
 import static org.filevinder.ui.controller.SearchController.prev;
 import static org.filevinder.ui.controller.SearchController.search;
+import org.filevinder.ui.editor.CodeEditor;
+import static org.filevinder.ui.editor.JSUtils.loadFile;
+import static org.filevinder.ui.editor.JSUtils.jsClean;
 import org.filevinder.ui.model.SearchResult;
 
 /**
@@ -82,6 +82,7 @@ public final class MainView extends Application {
 
     /**
      * Returns the main scene object for the application.
+     *
      * @param primaryStage the stage
      * @return the scene
      */
@@ -91,7 +92,7 @@ public final class MainView extends Application {
         scene.getStylesheets().add("filevinder.css");
         addMenuBar(primaryStage, scene);
         addSearchFields(scene);
-        addSearchResults(scene);
+        addSearchResultsAndDetailPane(scene);
         setGlobalEnterKeyEventHandler(root);
         primaryStage.setMinHeight(WINDOW_HEIGHT);
         primaryStage.setMinWidth(WINDOW_WIDTH);
@@ -106,7 +107,7 @@ public final class MainView extends Application {
         ((VBox) scene.getRoot()).getChildren().add(hbox);
     }
 
-    private void addSearchResults(final Scene scene) {
+    private void addSearchResultsAndDetailPane(final Scene scene) {
         TabPane tabPane = makeSearchTabPane(scene);
         ScrollPane fileDetail = makeFileDetailPane(scene);
         HBox hbox = new HBox();
@@ -132,19 +133,43 @@ public final class MainView extends Application {
     }
 
     private ScrollPane makeFileDetailPane(final Scene scene) {
-        TextFlow textFlow = new TextFlow();
-        Text fileTxt = new Text();
-
-        //bind the displayed text to the model
-        fileTxt.textProperty().bind(Bindings.convert(Model.getInstance().fileTextProperty()));
-
-        textFlow.getChildren().addAll(fileTxt);
-        VBox vBox = new VBox();
-        vBox.getChildren().add(textFlow);
-        textFlow.setMinWidth(TEXT_AREA_MIN_WIDTH);
-        ScrollPane scrollPane = new ScrollPane(vBox);
-
+        ScrollPane scrollPane = new ScrollPane(makeCodeEditor());
         return scrollPane;
+    }
+
+    private VBox makeCodeEditor() {
+        Label title = new Label("myfile.foo");
+        title.setStyle("-fx-font-size: 10;");
+        final CodeEditor editor = new CodeEditor();
+        final WebEngine engine = editor.webview.getEngine();
+
+        final Button undo = new Button("Undo");
+        undo.setOnAction((ActionEvent actionEvent) -> {
+            engine.executeScript("editor.setValue('" + jsClean(editor.getSavedTxt()) + "')");
+        });
+
+        final Button save = new Button("Save");
+        save.setOnAction((ActionEvent actionEvent) -> {
+            String txt = (String) engine.executeScript("editor.getValue();");
+            editor.setSavedTxt(txt);
+        });
+
+        final Button load = new Button("Load");
+        load.setOnAction((ActionEvent actionEvent) -> {
+            engine.executeScript("editor.setValue('" + jsClean(loadFile(this.getClass())) + "')");
+        });
+
+        // layout the scene.
+        final HBox buttonBox = new HBox();
+        buttonBox.setSpacing(10);
+        buttonBox.getChildren().addAll(load, save, undo);
+
+        final VBox layout = new VBox();
+        layout.setSpacing(10);
+        layout.getChildren().addAll(title, buttonBox, editor);
+        layout.setStyle("-fx-background-color: cornsilk; -fx-padding: 10;");
+
+        return layout;
     }
 
     private TableView<SearchResult> makePlainTextResultsTable(final Scene scene) {
