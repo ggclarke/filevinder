@@ -7,9 +7,13 @@
 */.gradle/**
 */.gradle/*
 /.gradle/
+*/build/**
+*/build/*
+/build/
 index.regf
 nb-configuration.xml
 .nb-gradle.properties
+.nb-gradle-properties
 /filevinder-gradle/.nb-gradle/
 /eng/build/
 /repo/build/
