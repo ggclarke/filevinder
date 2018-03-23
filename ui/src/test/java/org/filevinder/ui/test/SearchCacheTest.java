@@ -23,28 +23,24 @@ import org.filevinder.ui.utils.SearchData;
 import static org.filevinder.ui.utils.SearchData.TOKEN;
 import org.filevinder.ui.utils.SearchHistory;
 import static org.filevinder.ui.utils.SearchHistory.HIST_MAX;
+import org.filevinder.ui.utils.SysPropsProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  *
  * @author Gregory Clarke
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SearchHistory.class, System.class})
 public final class SearchCacheTest {
 
     @Before
     public void setUp() {
+        SysPropsProvider sysProps = mock(SysPropsProvider.class);
         String tmp = System.getProperty("java.io.tmpdir");
-        PowerMockito.mockStatic(System.class);  // Powermock can mock static and private methods
-        when(System.getenv(SysProps.FV_SEARCH_CACHE_FILE.toString())).
+        when(sysProps.getSysProp(SysProps.FV_SEARCH_CACHE_FILE.toString())).
                 thenReturn(tmp + "\\fv_test.txt");
     }
 

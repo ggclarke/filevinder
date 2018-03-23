@@ -1,3 +1,8 @@
 */target/**
 */target/*
+/target/
+*/.gradle/**
+*/.gradle/*
+/.gradle/
 index.regf
+nb-configuration.xml

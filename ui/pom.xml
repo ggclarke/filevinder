@@ -14,8 +14,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-io.version>2.6</commons-io.version>
-        <powermock.version>1.7.3</powermock.version>
-        <mockito.version>1.10.19</mockito.version>
     </properties>
 
     <name>user-interface</name>
@@ -43,38 +41,24 @@
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.12-alpha</version>
+            <version>4.0.13-alpha</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
-            <version>4.0.12-alpha</version>
+            <version>4.0.13-alpha</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
+            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito.version}</version>
+            <artifactId>mockito-core</artifactId>
+            <version>2.16.0</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

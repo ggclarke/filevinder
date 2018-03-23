@@ -17,7 +17,6 @@
 package org.filevinder.engine.test;
 
 import java.nio.charset.Charset;
-import javax.xml.bind.DatatypeConverter;
 import org.filevinder.common.Utils;
 import static org.filevinder.common.Utils.NL;
 import static org.filevinder.common.Utils.UTF8;
@@ -61,7 +60,7 @@ public final class UtilsTest {
         byte[] ba = "abcDEF123£🜁".getBytes(UTF8);
         assertTrue(isValidEncoding(ba, UTF8));
 
-        ba = DatatypeConverter.parseHexBinary("ed9fbf");
+        ba = hexStringToByteArray("ed9fbf");
         assertTrue(isValidEncoding(ba, UTF8));
     }
 
@@ -71,15 +70,15 @@ public final class UtilsTest {
         assertFalse(isValidEncoding(ba, UTF8));
 
         //The following two bytes cannot appear in a correct UTF-8 string
-        ba = DatatypeConverter.parseHexBinary("feff");
+        ba = hexStringToByteArray("feff");
         assertFalse(isValidEncoding(ba, UTF8));
 
         //overlong ascii character
-        ba = DatatypeConverter.parseHexBinary("c1bf");
+        ba = hexStringToByteArray("c1bf");
         assertFalse(isValidEncoding(ba, UTF8));
 
         //Overlong representation of the NUL character
-        ba = DatatypeConverter.parseHexBinary("c080");
+        ba = hexStringToByteArray("c080");
         assertFalse(isValidEncoding(ba, UTF8));
 
     }
@@ -159,4 +158,15 @@ public final class UtilsTest {
         trigrams = Utils.trigrams("");
         Assert.assertTrue(trigrams.length == 0);
     }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i + 1), 16));
+        }
+        return data;
+    }
+
 }

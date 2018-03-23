@@ -146,7 +146,7 @@ public final class SearchHistory {
     }
 
     private static Path getFile() {
-        String cacheFile = System.getenv(SysProps.FV_SEARCH_CACHE_FILE.toString());
+        String cacheFile = new SysPropsProvider().getSysProp(SysProps.FV_SEARCH_CACHE_FILE.toString());
         return Paths.get(cacheFile);
     }
 
@@ -170,4 +170,5 @@ public final class SearchHistory {
         }
         return txt.toString();
     }
+
 }
