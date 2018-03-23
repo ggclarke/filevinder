@@ -1,0 +1,34 @@
+allprojects  {
+  apply plugin: 'maven'
+
+  group = 'org.filevinder'
+version = '1.0.0-SNAPSHOT'
+}
+
+subprojects {
+  apply plugin: 'java'
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+  tasks.withType(JavaCompile) {
+  	options.encoding = 'UTF-8'
+  }
+
+  
+  repositories {
+    mavenLocal()
+    
+    maven { url "http://repo.maven.apache.org/maven2" }
+  }  
+
+
+  test {
+    environment "FV_CLASSPATH", "C:/source/filevinder/eng/target/"
+    environment "FV_INDEX_FILE_EXT", ".ffdr"
+    environment "FV_ENG_JAR", "filevinder-eng-1.0.0-SNAPSHOT.jar"
+    environment "FV_SEARCH_CLASS", "org.filevinder.core.SearchImpl"
+    environment "FV_SEARCH_CACHE_FILE", "c:/temp/fv_cache.txt"
+    environment "FV_TEST_ROOT", "c:/source/filevinder/testfiles/"
+  }
+
+
+}

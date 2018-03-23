@@ -1,0 +1,10 @@
+rootProject.name = 'filevinder'
+include ':filevinder-ui'
+include ':filevinder-eng'
+include ':filevinder-eng-interface'
+include ':filevinder-repo'
+
+project(':filevinder-ui').projectDir = "$rootDir/ui" as File
+project(':filevinder-eng').projectDir = "$rootDir/eng" as File
+project(':filevinder-eng-interface').projectDir = "$rootDir/eng-interface" as File
+project(':filevinder-repo').projectDir = "$rootDir/repo" as File

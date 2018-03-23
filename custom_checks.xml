@@ -177,7 +177,7 @@
     </module>
 
   <module name="SuppressionFilter">
-    <property name="file" value="c:/filevinder/suppressions.xml"/>
+    <property name="file" value="c:/source/filevinder/suppressions.xml"/>
   </module>
 
 </module>

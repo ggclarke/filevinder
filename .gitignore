@@ -1,3 +1,6 @@
+*/.nb-gradle/**
+*/.nb-gradle/*
+/.nb-gradle/
 */target/**
 */target/*
 /target/
@@ -6,3 +9,8 @@
 /.gradle/
 index.regf
 nb-configuration.xml
+.nb-gradle.properties
+/filevinder-gradle/.nb-gradle/
+/eng/build/
+/repo/build/
+/ui/build/
