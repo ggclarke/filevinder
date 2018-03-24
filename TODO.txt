@@ -1,6 +1,5 @@
 TODO
 ----
-Convert to java 10
 Add source repo crawler
 Add max and min size to GUI
 Add err notification on search e.g. (AccessDEnied exception when searching tin c:/temp/foo)
@@ -14,4 +13,5 @@ DONE
 ----
 Convert to Gradle
 Use codemirror as the text component
+Convert to java 9
 

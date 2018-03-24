@@ -1,43 +1,44 @@
 plugins {
     id 'org.unbroken-dome.test-sets' version '1.4.4'
-  }
+}
 
 allprojects  {
-  apply plugin: 'maven'
-  apply plugin: 'org.unbroken-dome.test-sets'
+    apply plugin: 'maven'
+    apply plugin: 'org.unbroken-dome.test-sets'
 
-  group = 'org.filevinder'
-version = '1.0.0-SNAPSHOT'
+    group = 'org.filevinder'
+    version = '1.0.0-SNAPSHOT'
 }
 
 subprojects {
-  apply plugin: 'java'
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
-  tasks.withType(JavaCompile) {
-  	options.encoding = 'UTF-8'
-  }
+    apply plugin: 'java'
+    sourceCompatibility = 1.9
+    targetCompatibility = 1.9
 
-task allInOneJar(type: Jar) {
+    tasks.withType(JavaCompile) {
+  	options.encoding = 'UTF-8'
+    }
+
+    task allInOneJar(type: Jar) {
 	manifest {
-        attributes 'Implementation-Title': 'FileVinder All-In-One',  
+            attributes 'Implementation-Title': 'FileVinder All-In-One',  
         	'Implementation-Version': version,
         	'Main-Class': 'org.filevinder.ui.view.MainView'
+        }
+        baseName = project.name + '-all'
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+        with jar
     }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
 
-  testSets {
-    integrationTest { dirName = 'integration-test' }
-  }
+    testSets {
+        integrationTest { dirName = 'integration-test' }
+    }
 
-
-  repositories {
-    mavenLocal()
     
-    maven { url "http://repo.maven.apache.org/maven2" }
-  }
+    repositories {
+        mavenLocal()
+    
+        maven { url "http://repo.maven.apache.org/maven2" }
+    }
 
 }

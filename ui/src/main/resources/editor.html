@@ -3,9 +3,21 @@
     <head>
         <title>Web View Editor</title>
         <link rel="stylesheet" href="codemirror.css">
+        
+        <style>
+        /* Autoresize: By setting an editor's height style to auto and giving 
+        the viewportMargin a value of Infinity, CodeMirror can be made to 
+        automatically resize to fit its content. */
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: auto;
+        }
+
+        </style>
+        
         <script src="codemirror.js"></script>
         <script src="./mode/clike/clike.js"></script>
-
+        
         <script language="javascript">
             
             function helloJava() {

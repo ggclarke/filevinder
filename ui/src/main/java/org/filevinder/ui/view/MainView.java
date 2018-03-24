@@ -109,8 +109,8 @@ public final class MainView extends Application {
 
     private void addSearchResultsAndDetailPane(final Scene scene) {
         TabPane tabPane = makeSearchTabPane(scene);
-        ScrollPane fileDetail = makeFileDetailPane(scene);
         HBox hbox = new HBox();
+        VBox fileDetail = makeCodeEditor();
         hbox.getChildren().addAll(tabPane, fileDetail);
         ((VBox) scene.getRoot()).getChildren().add(hbox);
     }
@@ -132,13 +132,8 @@ public final class MainView extends Application {
         return tabPane;
     }
 
-    private ScrollPane makeFileDetailPane(final Scene scene) {
-        ScrollPane scrollPane = new ScrollPane(makeCodeEditor());
-        return scrollPane;
-    }
-
     private VBox makeCodeEditor() {
-        Label title = new Label("myfile.foo");
+        Label title = new Label("Name: myfile.foo");
         title.setStyle("-fx-font-size: 10;");
         final CodeEditor editor = new CodeEditor();
         final WebEngine engine = editor.webview.getEngine();

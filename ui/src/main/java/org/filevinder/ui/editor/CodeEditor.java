@@ -52,15 +52,17 @@ public class CodeEditor extends StackPane {
      */
     public CodeEditor() {
 
-        webview.setPrefSize(800, 400);
-        webview.setMinSize(800, 400);
+//        webview.setPrefSize(400, 200);
+//        webview.setMinSize(400, 200);
+//        webview.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
+
         load();
 
         getChildren().add(webview);
     }
 
     private void load() {
-        URL url = this.getClass().getClassLoader().getResource("index.html");
+        URL url = this.getClass().getClassLoader().getResource("editor.html");
 
         WebEngine eng = webview.getEngine();
 
