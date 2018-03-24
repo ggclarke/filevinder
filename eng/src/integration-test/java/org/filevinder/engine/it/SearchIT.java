@@ -22,17 +22,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import org.filevinder.core.SearchImpl;
+import static org.filevinder.engine.it.Constants.FILES_TOTAL;
+import static org.filevinder.engine.it.Constants.ROOT_FILES;
+import static org.filevinder.engine.it.Constants.TEST_FOLDER1;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import org.filevinder.engine.test.Constants;
 
 /**
  *
  * @author Gregory Clarke
  */
-public final class SearchIT implements Constants {
+public final class SearchIT {
 
     @Test
     public void findAsciiInFile() {

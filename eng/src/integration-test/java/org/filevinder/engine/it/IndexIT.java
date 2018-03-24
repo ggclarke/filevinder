@@ -43,13 +43,25 @@ import static org.filevinder.common.Utils.validateFile;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import static org.filevinder.common.Utils.readEntireFile;
-import org.filevinder.engine.test.Constants;
+import static org.filevinder.engine.it.Constants.ANSI_LRG;
+import static org.filevinder.engine.it.Constants.CHINESE_UTF_16;
+import static org.filevinder.engine.it.Constants.CHINESE_UTF_8;
+import static org.filevinder.engine.it.Constants.FILES_TOTAL;
+import static org.filevinder.engine.it.Constants.INDEX_BYTE;
+import static org.filevinder.engine.it.Constants.INDEX_TXT;
+import static org.filevinder.engine.it.Constants.NO_LINES;
+import static org.filevinder.engine.it.Constants.ROOT_FILES;
+import static org.filevinder.engine.it.Constants.RUSSIAN_UTF_16;
+import static org.filevinder.engine.it.Constants.RUSSIAN_UTF_8;
+import static org.filevinder.engine.it.Constants.TEST_FOLDER1;
+import static org.filevinder.engine.it.Constants.TXT;
+import static org.filevinder.engine.it.Constants.UTF8_MULTI_BYTE;
 
 /**
  *
  * @author Gregory Clarke
  */
-public final class IndexIT implements Constants {
+public final class IndexIT{
 
     private static final int TRIGRAM_CNT = getTrigrams(TXT).size();
 

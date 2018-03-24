@@ -26,18 +26,18 @@ import org.filevinder.core.SearchImpl;
 import static org.filevinder.core.BinarySearch.findLine;
 import static org.filevinder.core.BinarySearch.findTrigram;
 import org.filevinder.core.FileTooBigException;
+import static org.filevinder.engine.it.Constants.INDEX_TXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.filevinder.engine.test.Constants;
 
 /**
  *
  * @author Gregory Clarke
  */
-public final class BinarySearchIT implements Constants {
+public final class BinarySearchIT {
 
     private File file;
 

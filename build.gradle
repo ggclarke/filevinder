@@ -1,5 +1,10 @@
+plugins {
+    id 'org.unbroken-dome.test-sets' version '1.4.4'
+  }
+
 allprojects  {
   apply plugin: 'maven'
+  apply plugin: 'org.unbroken-dome.test-sets'
 
   group = 'org.filevinder'
 version = '1.0.0-SNAPSHOT'
@@ -13,12 +18,27 @@ subprojects {
   	options.encoding = 'UTF-8'
   }
 
-  
+task allInOneJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'FileVinder All-In-One',  
+        	'Implementation-Version': version,
+        	'Main-Class': 'org.filevinder.ui.view.MainView'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+  testSets {
+    integrationTest { dirName = 'integration-test' }
+  }
+
+
   repositories {
     mavenLocal()
     
     maven { url "http://repo.maven.apache.org/maven2" }
-  }  
+  }
 
 
   test {
@@ -29,6 +49,7 @@ subprojects {
     environment "FV_SEARCH_CACHE_FILE", "c:/temp/fv_cache.txt"
     environment "FV_TEST_ROOT", "c:/source/filevinder/testfiles/"
   }
+
 
 
 }

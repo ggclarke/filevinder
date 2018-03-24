@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.engine.test;
+package org.filevinder.engine.it;
 
 import java.util.Arrays;
 import static java.util.Arrays.asList;
@@ -26,38 +26,41 @@ import static org.filevinder.interfaces.SysProps.FV_TEST_ROOT;
  *
  * @author Gregory Clarke
  */
-public interface Constants {
+public final class Constants {
 
-    String TEST_ROOT_VAL = System.getenv(FV_TEST_ROOT.toString());
+    private Constants() {
+    }
 
-    String TEST_FOLDER1 = TEST_ROOT_VAL + "testfiles1";
+    static final String TEST_ROOT_VAL = System.getenv(FV_TEST_ROOT.toString());
 
-    List<String> ROOT_FILES = asList(
+    static final String TEST_FOLDER1 = TEST_ROOT_VAL + "testfiles1";
+
+    static final List<String> ROOT_FILES = asList(
             "/a", "/b", "/c", "/d", "/e", "/f", "/g", "/h", "/i", "/j");
 
-    int FILES_TOTAL = ROOT_FILES.size() * ROOT_FILES.size();
+    static final int FILES_TOTAL = ROOT_FILES.size() * ROOT_FILES.size();
 
-    String IDX_ON_DISK = TEST_ROOT_VAL + "testfiles2/index.dat";
+    static final String IDX_ON_DISK = TEST_ROOT_VAL + "testfiles2/index.dat";
 
-    String ANSI_LRG = TEST_ROOT_VAL + "testfiles2/ansi_large.txt";
+    static final String ANSI_LRG = TEST_ROOT_VAL + "testfiles2/ansi_large.txt";
 
-    String ANSI_TST = TEST_ROOT_VAL + "testfiles2/ansi_test.txt";
+    static final String ANSI_TST = TEST_ROOT_VAL + "testfiles2/ansi_test.txt";
 
-    String NO_LINES = TEST_ROOT_VAL + "testfiles2/no_lines.txt";
+    static final String NO_LINES = TEST_ROOT_VAL + "testfiles2/no_lines.txt";
 
-    String RUSSIAN_UTF_8 = TEST_ROOT_VAL + "testfiles2/russian_utf8.htm";
+    static final String RUSSIAN_UTF_8 = TEST_ROOT_VAL + "testfiles2/russian_utf8.htm";
 
-    String RUSSIAN_UTF_16 = TEST_ROOT_VAL + "testfiles2/russian_utf-16le.htm";
+    static final String RUSSIAN_UTF_16 = TEST_ROOT_VAL + "testfiles2/russian_utf-16le.htm";
 
-    String CHINESE_UTF_8 = TEST_ROOT_VAL + "testfiles2/chinese_utf8.htm";
+    static final String CHINESE_UTF_8 = TEST_ROOT_VAL + "testfiles2/chinese_utf8.htm";
 
-    String CHINESE_UTF_16 = TEST_ROOT_VAL + "testfiles2/chinese_utf-16le.htm";
+    static final String CHINESE_UTF_16 = TEST_ROOT_VAL + "testfiles2/chinese_utf-16le.htm";
 
-    String UTF8_MULTI_BYTE = TEST_ROOT_VAL + "testfiles2/utf8_multibyte_test.txt";
+    static final String UTF8_MULTI_BYTE = TEST_ROOT_VAL + "testfiles2/utf8_multibyte_test.txt";
 
-    String INDEX_TXT = TEST_ROOT_VAL + "index.txt";
+    static final String INDEX_TXT = TEST_ROOT_VAL + "index.txt";
 
-    String INDEX_BYTE = TEST_ROOT_VAL + "index.byte";
+    static final String INDEX_BYTE = TEST_ROOT_VAL + "index.byte";
 
     public static final List<String> TXT = Arrays.asList(
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem ",

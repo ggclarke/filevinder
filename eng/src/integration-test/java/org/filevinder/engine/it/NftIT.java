@@ -24,7 +24,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.filevinder.core.InMemoryIndex;
-import static org.filevinder.engine.test.Constants.IDX_ON_DISK;
 import org.filevinder.interfaces.Index;
 import static org.filevinder.common.Utils.getFiles;
 import static org.junit.Assert.assertTrue;
@@ -32,8 +31,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import static org.filevinder.common.Utils.readEntireFile;
 import org.filevinder.core.SearchImpl;
-import static org.filevinder.engine.test.Constants.TEST_FOLDER1;
-import org.filevinder.engine.test.Constants;
+import static org.filevinder.engine.it.Constants.IDX_ON_DISK;
+import static org.filevinder.engine.it.Constants.TEST_FOLDER1;
 
 /**
  *
