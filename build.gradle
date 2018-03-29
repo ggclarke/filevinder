@@ -41,4 +41,13 @@ subprojects {
         maven { url "http://repo.maven.apache.org/maven2" }
     }
 
+  integrationTest {
+    environment "FV_CLASSPATH", "C:/source/filevinder/eng/build/libs/"
+    environment "FV_INDEX_FILE_EXT", ".ffdr"
+    environment "FV_ENG_JAR", "filevinder-eng-1.0.0-SNAPSHOT.jar"
+    environment "FV_SEARCH_CLASS", "org.filevinder.core.SearchImpl"
+    environment "FV_SEARCH_CACHE_FILE", "c:/temp/fv_cache.txt"
+    environment "FV_TEST_ROOT", "c:/source/filevinder/testfiles/"
+  }
+
 }
