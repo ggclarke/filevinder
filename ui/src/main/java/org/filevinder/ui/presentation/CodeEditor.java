@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.editor;
+package org.filevinder.ui.presentation;
 
 import java.net.URL;
 import javafx.beans.value.ObservableValue;
@@ -32,7 +32,7 @@ import netscape.javascript.JSObject;
  * editor.
  *
  */
-public class CodeEditor extends StackPane {
+class CodeEditor extends StackPane {
 
     /**
      * A 'webview' used to encapsulate the CodeMirror JavaScript.

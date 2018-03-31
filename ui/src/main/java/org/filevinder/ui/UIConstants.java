@@ -23,10 +23,16 @@ import java.nio.charset.Charset;
  *
  * @author Gregory Clarke
  */
-public final class Constants {
+public final class UIConstants {
 
-    private Constants() {
+    private UIConstants() {
     }
+
+    /**
+     * Default values assumed by UI fields.
+     */
+    public static final String SEARCH_TEXT_DEFAULT = "",
+            SEARCH_LOCATION_DEFAULT = "", SEARCH_FILE_TYPES_DEFAULT = "";
 
     //TODO: get this from an env var
     /**

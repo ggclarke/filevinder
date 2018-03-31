@@ -16,9 +16,9 @@
  */
 package org.filevinder.ui.it;
 
-import org.filevinder.ui.utils.FSUtils;
+import org.filevinder.ui.interactor.utils.FSUtils;
 import java.util.SortedSet;
-import static org.filevinder.ui.utils.FSUtils.partialFolderName;
+import static org.filevinder.ui.interactor.utils.FSUtils.partialFolderName;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.filevinder.interfaces.SysProps.FV_TEST_ROOT;

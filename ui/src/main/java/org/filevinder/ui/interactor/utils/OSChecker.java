@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.utils;
+package org.filevinder.ui.interactor.utils;
 
 /**
  * A class to determine the current Operating System.

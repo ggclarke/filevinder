@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.view;
+package org.filevinder.ui;
 /**
  * A custom application Exception that gets propagated from the View.
  *
  * @author Gregory Clarke
  */
-public class ViewException extends Exception {
+public class UIException extends Exception {
 
     /**
      * Create a custom application exception.
@@ -28,7 +28,7 @@ public class ViewException extends Exception {
      * @param msg The exception description
      * @param t The exception instance
      */
-    public ViewException(final String msg, final Throwable t) {
+    public UIException(final String msg, final Throwable t) {
         super(msg, t);
     }
 
@@ -37,7 +37,7 @@ public class ViewException extends Exception {
      *
      * @param msg The exception description
      */
-    public ViewException(final String msg) {
+    public UIException(final String msg) {
         super(msg);
     }
 

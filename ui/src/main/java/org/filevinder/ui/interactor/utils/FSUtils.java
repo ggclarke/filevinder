@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.utils;
+package org.filevinder.ui.interactor.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import org.apache.commons.io.FilenameUtils;
 import static org.apache.commons.io.FilenameUtils.getFullPathNoEndSeparator;
 import static org.apache.commons.io.FilenameUtils.getPathNoEndSeparator;
 import static org.apache.commons.io.FilenameUtils.getPrefix;
-import static org.filevinder.ui.Constants.DATE_FORMAT;
+import static org.filevinder.ui.UIConstants.DATE_FORMAT;
 
 /**
  *

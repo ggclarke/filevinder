@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.model;
+package org.filevinder.ui.presentation;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -24,7 +24,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Gregory Clarke
  */
-public final class SearchResult {
+final class SearchResultModel {
 
     private final StringProperty name;
     private final StringProperty path;
@@ -35,7 +35,7 @@ public final class SearchResult {
     private final StringProperty accessed;
     private final StringProperty permission;
 
-    public SearchResult(final String nameVal, final String pathVal, final String sizeVal,
+    public SearchResultModel(final String nameVal, final String pathVal, final String sizeVal,
             final String typeVal, final String modifiedVal, final String createdVal,
             final String accessedVal, final String permissionVal) {
         this.name = new SimpleStringProperty(nameVal);

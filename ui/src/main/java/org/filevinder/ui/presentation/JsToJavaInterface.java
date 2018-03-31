@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Gregory Clarke
+ * Copyright (C) 2017 Gregory Clarke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.utils;
+package org.filevinder.ui.presentation;
 
 /**
- * A wrapper around System for mocking purposes.
+ *
  * @author Gregory Clarke
  */
-public class SysPropsProvider {
- 
-    /**
-     * Returns the specified environment variable value.
-     * @param prop
-     * @return 
-     */
-    public String getSysProp(String prop){
-        return System.getenv(prop);
+class JsToJavaInterface {
+
+    public String helloJava(String str) {
+        System.out.println("Hello Java, JS says " + str);
+        return "Nice to meet you too";
     }
 }

@@ -14,12 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.model;
+package org.filevinder.ui.presentation;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.filevinder.ui.utils.OSChecker;
+import org.filevinder.ui.interactor.utils.OSChecker;
+import static org.filevinder.ui.UIConstants.SEARCH_FILE_TYPES_DEFAULT;
+import static org.filevinder.ui.UIConstants.SEARCH_LOCATION_DEFAULT;
+import static org.filevinder.ui.UIConstants.SEARCH_TEXT_DEFAULT;
 
 /**
  * Model Parameters with two way binding to the main Application UI. The model
@@ -27,30 +30,19 @@ import org.filevinder.ui.utils.OSChecker;
  *
  * @author Gregory Clarke
  */
-public final class Model {
+public final class SearchModel {
 
-    /**
-     * Default values assumed by UI fields.
-     */
-    public static final String SEARCH_TEXT_DEFAULT = "",
-            SEARCH_LOCATION_DEFAULT = "", SEARCH_FILE_TYPES_DEFAULT = "";
-
-    private static final Model SINGLETON = new Model();
-    private SimpleStringProperty searchText, searchLocation, searchFileTypes,
+    private final SimpleStringProperty searchText, searchLocation, searchFileTypes,
             fileText;
-    private ObservableList<SearchResult> searchResults;
+    private ObservableList<SearchResultModel> searchResults;
     private int prevSearchPos;
 
-    private Model() {
+    public SearchModel() {
         searchText = new SimpleStringProperty(SEARCH_TEXT_DEFAULT);
         searchLocation = new SimpleStringProperty(SEARCH_LOCATION_DEFAULT);
         searchFileTypes = new SimpleStringProperty(SEARCH_FILE_TYPES_DEFAULT);
         fileText = new SimpleStringProperty("Hello World");
         searchResults = FXCollections.observableArrayList();
-    }
-
-    public static Model getInstance() {
-        return SINGLETON;
     }
 
     public String getFileText() {
@@ -101,11 +93,11 @@ public final class Model {
         return searchFileTypes.getValue();
     }
 
-    public ObservableList<SearchResult> getSearchResults() {
+    public ObservableList<SearchResultModel> getSearchResults() {
         return searchResults;
     }
 
-    public void setSearchResults(final ObservableList<SearchResult> searchResultsVal) {
+    public void setSearchResults(final ObservableList<SearchResultModel> searchResultsVal) {
         searchResults = searchResultsVal;
     }
 

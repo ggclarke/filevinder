@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.editor;
+package org.filevinder.ui.presentation;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +23,7 @@ import java.io.InputStream;
  *
  * @author Gregory Clarke
  */
-public final class JSUtils {
+final class JSUtils {
 
     private JSUtils() {
     }

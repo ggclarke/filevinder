@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.view;
+package org.filevinder.ui.presentation;
 
 import static java.lang.System.out;
 import javafx.beans.value.ChangeListener;
@@ -33,9 +33,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import static org.filevinder.ui.utils.FSUtils.autoCompletePath;
-import static org.filevinder.ui.utils.FSUtils.foldersInCurrentPath;
-import static org.filevinder.ui.utils.FSUtils.partialFolderName;
+import static org.filevinder.ui.interactor.utils.FSUtils.autoCompletePath;
+import static org.filevinder.ui.interactor.utils.FSUtils.foldersInCurrentPath;
+import static org.filevinder.ui.interactor.utils.FSUtils.partialFolderName;
 
 /**
  * This class is a TextField which implements an "autocomplete" functionality,
@@ -69,7 +69,7 @@ import static org.filevinder.ui.utils.FSUtils.partialFolderName;
  *
  * @author Gregory Clarke
  */
-public final class AutoCompleteTextField extends TextField {
+final class AutoCompleteTextField extends TextField {
 
     /**
      * The existing auto complete menuEntries.

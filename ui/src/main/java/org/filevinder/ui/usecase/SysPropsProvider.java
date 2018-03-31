@@ -14,31 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.test;
-
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import org.filevinder.ui.view.MainView;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.testfx.framework.junit.ApplicationTest;
+package org.filevinder.ui.usecase;
 
 /**
+ * A wrapper around System for mocking purposes.
  *
  * @author Gregory Clarke
  */
-public final class ViewTest extends ApplicationTest {
+public final class SysPropsProvider {
 
-    @Override
-    public void start(final Stage primaryStage) {
-        Scene scene = (new MainView()).setTheScene(primaryStage);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    /**
+     * Returns the specified environment variable value.
+     *
+     * @param propertyName property name
+     * @return String property
+     */
+    public String getSysProp(final String propertyName) {
+        return System.getenv(propertyName);
     }
-
-    @Test
-    public void shouldContainSearchButton() {
-        assertEquals(lookup("#searchButton").queryButton().getText(), "Search");
-    }
-
 }

@@ -19,11 +19,11 @@ package org.filevinder.ui.test;
 import java.io.IOException;
 import java.util.List;
 import org.filevinder.interfaces.SysProps;
-import org.filevinder.ui.utils.SearchData;
-import static org.filevinder.ui.utils.SearchData.TOKEN;
-import org.filevinder.ui.utils.SearchHistory;
-import static org.filevinder.ui.utils.SearchHistory.HIST_MAX;
-import org.filevinder.ui.utils.SysPropsProvider;
+import org.filevinder.ui.presentation.SearchDataModel;
+import static org.filevinder.ui.presentation.SearchDataModel.TOKEN;
+import org.filevinder.ui.interactor.utils.SearchHistory;
+import static org.filevinder.ui.interactor.utils.SearchHistory.HIST_MAX;
+import org.filevinder.ui.usecase.SysPropsProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public final class SearchCacheTest {
         try {
             SearchHistory.delete();
             String searchTxt = "search text 1";
-            SearchData srch = new SearchData(searchTxt);
+            SearchDataModel srch = new SearchDataModel(searchTxt);
             SearchHistory.persist(srch);
             List<String> list = SearchHistory.retrieveRaw();
             Assert.assertEquals(searchTxt + TOKEN + TOKEN, list.get(0));
@@ -65,7 +65,7 @@ public final class SearchCacheTest {
             SearchHistory.delete();
             String searchTxt = "search text";
             for (int i = 0; i < SearchHistory.HIST_MAX + 5; i++) {
-                SearchHistory.persist(new SearchData(searchTxt));
+                SearchHistory.persist(new SearchDataModel(searchTxt));
             }
             List<String> list = SearchHistory.retrieveRaw();
             Assert.assertEquals(SearchHistory.HIST_MAX, list.size());
@@ -82,7 +82,7 @@ public final class SearchCacheTest {
             SearchHistory.delete();
             String searchTxt = "search text";
             for (int i = 0; i < HIST_MAX + offset; i++) {
-                SearchHistory.persist(new SearchData(searchTxt + i));
+                SearchHistory.persist(new SearchDataModel(searchTxt + i));
             }
             List<String> list = SearchHistory.retrieveRaw();
 
@@ -101,10 +101,10 @@ public final class SearchCacheTest {
 
             String searchTxt1 = "search text1", searchLoc1 = "temp1", searchTyp1 = "*.txt1";
             String searchTxt2 = "search text2", searchLoc2 = "temp2", searchTyp2 = "*.txt2";
-            SearchHistory.persist(new SearchData(searchTxt1, searchLoc1, searchTyp1));
-            SearchHistory.persist(new SearchData(searchTxt2, searchLoc2, searchTyp2));
+            SearchHistory.persist(new SearchDataModel(searchTxt1, searchLoc1, searchTyp1));
+            SearchHistory.persist(new SearchDataModel(searchTxt2, searchLoc2, searchTyp2));
 
-            List<SearchData> list = SearchHistory.retrieve();
+            List<SearchDataModel> list = SearchHistory.retrieve();
 
             Assert.assertEquals(list.get(1).getSearchText(), searchTxt1);
             Assert.assertEquals(list.get(1).getSearchLocation(), searchLoc1);
@@ -114,7 +114,7 @@ public final class SearchCacheTest {
             Assert.assertEquals(list.get(0).getSearchLocation(), searchLoc2);
             Assert.assertEquals(list.get(0).getSearchFileTypes(), searchTyp2);
 
-            SearchHistory.persist(new SearchData(searchTxt1, searchLoc1, searchTyp1));
+            SearchHistory.persist(new SearchDataModel(searchTxt1, searchLoc1, searchTyp1));
 
         } catch (IOException ioe) {
             Assert.fail();
@@ -125,7 +125,7 @@ public final class SearchCacheTest {
     public void testMostRecentNullIsReturned() {
         try {
             SearchHistory.delete();
-            SearchData last = SearchHistory.retrievePrev(0);
+            SearchDataModel last = SearchHistory.retrievePrev(0);
             Assert.assertNull(last);
 
         } catch (IOException ioe) {
@@ -138,9 +138,9 @@ public final class SearchCacheTest {
         try {
             String str1 = "search text 1", str2 = "search text 2", str3 = "search text 3";
             SearchHistory.delete();
-            SearchHistory.persist(new SearchData(str1));
-            SearchHistory.persist(new SearchData(str2));
-            SearchHistory.persist(new SearchData(str3));
+            SearchHistory.persist(new SearchDataModel(str1));
+            SearchHistory.persist(new SearchDataModel(str2));
+            SearchHistory.persist(new SearchDataModel(str3));
 
             Assert.assertEquals(str3, SearchHistory.retrievePrev(0).getSearchText());
             Assert.assertEquals(str2, SearchHistory.retrievePrev(1).getSearchText());

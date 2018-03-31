@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.utils;
+package org.filevinder.ui.interactor.utils;
 
+import org.filevinder.ui.usecase.SysPropsProvider;
+import org.filevinder.ui.presentation.SearchDataModel;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.filevinder.interfaces.SysProps;
-import static org.filevinder.ui.utils.SearchData.TOKEN;
+import static org.filevinder.ui.presentation.SearchDataModel.TOKEN;
 
 /**
  *
@@ -52,7 +54,7 @@ public final class SearchHistory {
      * @param searchData a past search
      * @throws IOException IO exceptions
      */
-    public static synchronized void persist(final SearchData searchData) throws IOException {
+    public static synchronized void persist(final SearchDataModel searchData) throws IOException {
         Path path = getFile();
 
         Files.write(path,
@@ -92,12 +94,12 @@ public final class SearchHistory {
      * @return list of searches
      * @throws IOException IO exceptions
      */
-    public static List<SearchData> retrieve() throws IOException {
+    public static List<SearchDataModel> retrieve() throws IOException {
         List<String> res = retrieveRaw();
-        ArrayList<SearchData> resObj = new ArrayList<>(res.size());
+        ArrayList<SearchDataModel> resObj = new ArrayList<>(res.size());
         for (String s : res) {
             String[] stringArr = s.split(TOKEN, -1);
-            SearchData data = new SearchData(stringArr[0], stringArr[1], stringArr[2]);
+            SearchDataModel data = new SearchDataModel(stringArr[0], stringArr[1], stringArr[2]);
             resObj.add(data);
         }
         return resObj;
@@ -110,13 +112,13 @@ public final class SearchHistory {
      * @throws IOException IO exceptions
      * @param pos specifies how many searches back
      */
-    public static SearchData retrievePrev(final int pos) throws IOException {
+    public static SearchDataModel retrievePrev(final int pos) throws IOException {
         List<String> res = retrieveRaw();
         if (!isValidPos(pos)) {
             return null;
         }
         String[] stringArr = res.get(pos).split(TOKEN, -1);
-        return new SearchData(stringArr[0], stringArr[1], stringArr[2]);
+        return new SearchDataModel(stringArr[0], stringArr[1], stringArr[2]);
     }
 
     /**

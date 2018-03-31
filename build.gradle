@@ -23,7 +23,7 @@ subprojects {
 	manifest {
             attributes 'Implementation-Title': 'FileVinder All-In-One',  
         	'Implementation-Version': version,
-        	'Main-Class': 'org.filevinder.ui.view.MainView'
+        	'Main-Class': 'org.filevinder.ui.Main'
         }
         baseName = project.name + '-all'
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

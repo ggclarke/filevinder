@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Gregory Clarke
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,24 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.view;
+package org.filevinder.ui.presentation;
 
-import org.filevinder.ui.model.Model;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -39,80 +31,58 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
-import javafx.stage.Stage;
-import static org.filevinder.ui.Constants.GAP_S;
-import static org.filevinder.ui.Constants.GAP_XS;
-import static org.filevinder.ui.Constants.PAD_M;
-import static org.filevinder.ui.Constants.WINDOW_HEIGHT;
-import static org.filevinder.ui.Constants.WINDOW_WIDTH;
-import static org.filevinder.ui.controller.SearchController.clear;
-import static org.filevinder.ui.controller.SearchController.next;
-import static org.filevinder.ui.controller.SearchController.prev;
-import static org.filevinder.ui.controller.SearchController.search;
-import org.filevinder.ui.editor.CodeEditor;
-import static org.filevinder.ui.editor.JSUtils.loadFile;
-import static org.filevinder.ui.editor.JSUtils.jsClean;
-import org.filevinder.ui.model.SearchResult;
+import static org.filevinder.ui.presentation.JSUtils.jsClean;
+import static org.filevinder.ui.presentation.JSUtils.loadFile;
+import static org.filevinder.ui.UIConstants.GAP_S;
+import static org.filevinder.ui.UIConstants.GAP_XS;
+import static org.filevinder.ui.UIConstants.PAD_M;
 
 /**
- * The main MainView is value bound to the model and invokes the controller.
+ * The view covering all search use case features.
  *
  * @author Gregory Clarke
  */
-public final class MainView extends Application {
+public final class SearchView {
 
     private static final int COL_0 = 0, COL_1 = 1;
-    private final int ROW_4 = 4, ROW_3 = 3, ROW_2 = 2, ROW_1 = 1;
+    private static final int ROW_4 = 4, ROW_3 = 3, ROW_2 = 2, ROW_1 = 1;
 
-    @Override
-    public void start(final Stage primaryStage) {
-        Scene scene = setTheScene(primaryStage);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    private final SearchModel searchModel;
+    private final SearchController searchController;
+
+    /**
+     * Construct a search view object.
+     *
+     * @param model The search view model
+     * @param controller The search view controller
+     */
+    public SearchView(final SearchModel model, final SearchController controller) {
+        searchModel = model;
+        searchController = controller;
     }
 
     /**
-     * Returns the main scene object for the application.
-     *
-     * @param primaryStage the stage
-     * @return the scene
+     * Returns an HBox containing the input fields for a search.
+     * @return hbox layout component
      */
-    public Scene setTheScene(final Stage primaryStage) {
-        VBox root = new VBox();
-        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        scene.getStylesheets().add("filevinder.css");
-        addMenuBar(primaryStage, scene);
-        addSearchFields(scene);
-        addSearchResultsAndDetailPane(scene);
-        setGlobalEnterKeyEventHandler(root);
-        primaryStage.setMinHeight(WINDOW_HEIGHT);
-        primaryStage.setMinWidth(WINDOW_WIDTH);
-        primaryStage.setTitle("filevinder");
-        return scene;
-    }
-
-    private void addSearchFields(final Scene scene) {
+    public HBox addSearchFields() {
         GridPane grid = createSearchGrid();
         HBox hbox = new HBox();
         hbox.getChildren().addAll(grid);
-        ((VBox) scene.getRoot()).getChildren().add(hbox);
+        return hbox;
     }
 
-    private void addSearchResultsAndDetailPane(final Scene scene) {
+    public HBox addSearchResultsAndDetailPane(final Scene scene) {
         TabPane tabPane = makeSearchTabPane(scene);
         HBox hbox = new HBox();
         VBox fileDetail = makeCodeEditor();
         hbox.getChildren().addAll(tabPane, fileDetail);
-        ((VBox) scene.getRoot()).getChildren().add(hbox);
+        return hbox;
     }
 
     private TabPane makeSearchTabPane(final Scene scene) {
@@ -120,7 +90,8 @@ public final class MainView extends Application {
         TabPane tabPane = new TabPane();
 
         Tab plainTextTab = new Tab();
-        TableView<SearchResult> resultsTable = makePlainTextResultsTable(scene);
+        TableView<SearchResultModel> resultsTable = makePlainTextResultsTable(scene);
+        resultsTable.setId("searchResultsTable");
         plainTextTab.setText("Plain Text");
         plainTextTab.setContent(resultsTable);
 
@@ -167,9 +138,9 @@ public final class MainView extends Application {
         return layout;
     }
 
-    private TableView<SearchResult> makePlainTextResultsTable(final Scene scene) {
+    private TableView<SearchResultModel> makePlainTextResultsTable(final Scene scene) {
 
-        TableView<SearchResult> resultsTable = new TableView<>();
+        TableView<SearchResultModel> resultsTable = new TableView<>();
 
         TableColumn nameCol = new TableColumn("Name");
         TableColumn pathCol = new TableColumn("Path");
@@ -193,24 +164,9 @@ public final class MainView extends Application {
                 modifiedCol, createdCol, accessedCol, permissionCol);
 
         //create the table binding with the model
-        resultsTable.setItems(Model.getInstance().getSearchResults());
+        resultsTable.setItems(searchModel.getSearchResults());
 
         return resultsTable;
-    }
-
-    private void addMenuBar(final Stage primaryStage, final Scene scene) {
-        MenuBar menuBar = new MenuBar();
-        Menu mainMenu = new Menu("File");
-        MenuItem exitCmd = new MenuItem("Exit");
-        mainMenu.getItems().addAll(exitCmd);
-        menuBar.getMenus().addAll(mainMenu);
-
-        exitCmd.setOnAction(
-                (ActionEvent e) -> primaryStage.close()
-        );
-
-        exitCmd.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
-        ((VBox) scene.getRoot()).getChildren().add(menuBar);
     }
 
     private GridPane createSearchGrid() {
@@ -233,7 +189,8 @@ public final class MainView extends Application {
         fileName.setTooltip(tooltip);
         grid.add(fileName, COL_0, row);
         TextField searchFileTypes = new TextField();
-        searchFileTypes.textProperty().bindBidirectional(Model.getInstance().searchFileTypesProperty());
+        searchFileTypes.setId("searchFileTypes");
+        searchFileTypes.textProperty().bindBidirectional(searchModel.searchFileTypesProperty());
         grid.add(searchFileTypes, COL_1, row);
     }
 
@@ -246,7 +203,8 @@ public final class MainView extends Application {
         SortedSet<String> prompts = new TreeSet<>();
         prompts.add(""); //TODO: why is this needed?
         AutoCompleteTextField fsAutoCompleter = new AutoCompleteTextField(prompts);
-        fsAutoCompleter.textProperty().bindBidirectional(Model.getInstance().searchLocationProperty());
+        fsAutoCompleter.setId("searchLocation");
+        fsAutoCompleter.textProperty().bindBidirectional(searchModel.searchLocationProperty());
         grid.add(fsAutoCompleter, COL_1, row);
     }
 
@@ -257,7 +215,8 @@ public final class MainView extends Application {
         patternLbl.setTooltip(tooltip);
         grid.add(patternLbl, COL_0, row);
         TextField searchText = new TextField();
-        searchText.textProperty().bindBidirectional(Model.getInstance().searchTextProperty());
+        searchText.setId("searchText");
+        searchText.textProperty().bindBidirectional(searchModel.searchTextProperty());
         grid.add(searchText, COL_1, row);
     }
 
@@ -265,19 +224,19 @@ public final class MainView extends Application {
         HBox hBox = new HBox();
         Button search = new Button("Search");
         search.setId("searchButton");
-        search.setOnAction((ActionEvent ae) -> search());
+        search.setOnAction((ActionEvent ae) -> searchController.search());
 
         Button prev = new Button("<");
         prev.setId("prevButton");
-        prev.setOnAction((ActionEvent ae) -> prev());
+        prev.setOnAction((ActionEvent ae) -> searchController.prev());
 
         Button next = new Button(">");
         next.setId("nextButton");
-        next.setOnAction((ActionEvent ae) -> next());
+        next.setOnAction((ActionEvent ae) -> searchController.next());
 
         Button clear = new Button("Clear");
         clear.setId("clearButton");
-        clear.setOnAction((ActionEvent ae) -> clear());
+        clear.setOnAction((ActionEvent ae) -> searchController.clear());
 
         Region spacer1 = new Region();
         spacer1.setMinWidth(GAP_XS);
@@ -287,24 +246,6 @@ public final class MainView extends Application {
 
         hBox.getChildren().addAll(search, spacer1, prev, next, spacer2, clear);
         return hBox;
-    }
-
-    private void setGlobalEnterKeyEventHandler(final Node root) {
-        root.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
-            if (ev.getCode() == KeyCode.ENTER) {
-                search();
-                ev.consume();
-            }
-        });
-    }
-
-    /**
-     * Launch the application UI.
-     *
-     * @param args Runtime arguments
-     */
-    public static void main(final String[] args) {
-        launch(args);
     }
 
 }
