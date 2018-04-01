@@ -54,16 +54,20 @@ public final class SearchView {
 
     private final SearchModel searchModel;
     private final SearchController searchController;
+    private final FilesUtil filesUtil;
 
     /**
      * Construct a search view object.
      *
      * @param model The search view model
      * @param controller The search view controller
+     * @param fsUtil File System utility
      */
-    public SearchView(final SearchModel model, final SearchController controller) {
+    public SearchView(final SearchModel model, final SearchController controller,
+            final FilesUtil fsUtil) {
         searchModel = model;
         searchController = controller;
+        filesUtil = fsUtil;
     }
 
     /**
@@ -77,6 +81,11 @@ public final class SearchView {
         return hbox;
     }
 
+    /**
+     * Creates a HBox with the search results and details panes.
+     * @param scene the scene
+     * @return HBox returned HBox
+     */
     public HBox addSearchResultsAndDetailPane(final Scene scene) {
         TabPane tabPane = makeSearchTabPane(scene);
         HBox hbox = new HBox();
@@ -202,7 +211,7 @@ public final class SearchView {
         grid.add(searchLocLbl, COL_0, row);
         SortedSet<String> prompts = new TreeSet<>();
         prompts.add(""); //TODO: why is this needed?
-        AutoCompleteTextField fsAutoCompleter = new AutoCompleteTextField(prompts);
+        FilePathCompleterTextField fsAutoCompleter = new FilePathCompleterTextField(prompts, filesUtil);
         fsAutoCompleter.setId("searchLocation");
         fsAutoCompleter.textProperty().bindBidirectional(searchModel.searchLocationProperty());
         grid.add(fsAutoCompleter, COL_1, row);

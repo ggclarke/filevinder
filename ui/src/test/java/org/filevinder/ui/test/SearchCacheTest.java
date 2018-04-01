@@ -19,10 +19,11 @@ package org.filevinder.ui.test;
 import java.io.IOException;
 import java.util.List;
 import org.filevinder.interfaces.SysProps;
-import org.filevinder.ui.presentation.SearchDataModel;
-import static org.filevinder.ui.presentation.SearchDataModel.TOKEN;
-import org.filevinder.ui.interactor.utils.SearchHistory;
-import static org.filevinder.ui.interactor.utils.SearchHistory.HIST_MAX;
+import org.filevinder.ui.usecase.CachedSearchData;
+import static org.filevinder.ui.usecase.CachedSearchData.TOKEN;
+import org.filevinder.ui.fs.SearchHistoryStore;
+import static org.filevinder.ui.fs.SearchHistoryStore.HIST_MAX;
+import org.filevinder.ui.usecase.SearchHistory;
 import org.filevinder.ui.usecase.SysPropsProvider;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,12 +47,14 @@ public final class SearchCacheTest {
 
     @Test
     public void addToSearchHistory() {
+        SearchHistory hist = new SearchHistoryStore();
+
         try {
-            SearchHistory.delete();
+            hist.delete();
             String searchTxt = "search text 1";
-            SearchDataModel srch = new SearchDataModel(searchTxt);
-            SearchHistory.persist(srch);
-            List<String> list = SearchHistory.retrieveRaw();
+            CachedSearchData srch = new CachedSearchData(searchTxt);
+            hist.persist(srch);
+            List<String> list = hist.retrieveRaw();
             Assert.assertEquals(searchTxt + TOKEN + TOKEN, list.get(0));
 
         } catch (IOException ioe) {
@@ -61,14 +64,15 @@ public final class SearchCacheTest {
 
     @Test
     public void exceedMaxSearchHistory() {
+        SearchHistory hist = new SearchHistoryStore();
         try {
-            SearchHistory.delete();
+            hist.delete();
             String searchTxt = "search text";
-            for (int i = 0; i < SearchHistory.HIST_MAX + 5; i++) {
-                SearchHistory.persist(new SearchDataModel(searchTxt));
+            for (int i = 0; i < SearchHistoryStore.HIST_MAX + 5; i++) {
+                hist.persist(new CachedSearchData(searchTxt));
             }
-            List<String> list = SearchHistory.retrieveRaw();
-            Assert.assertEquals(SearchHistory.HIST_MAX, list.size());
+            List<String> list = hist.retrieveRaw();
+            Assert.assertEquals(SearchHistoryStore.HIST_MAX, list.size());
 
         } catch (IOException ioe) {
             Assert.fail();
@@ -77,14 +81,15 @@ public final class SearchCacheTest {
 
     @Test
     public void rollSearchHistory() {
+        SearchHistory hist = new SearchHistoryStore();
         try {
             final int offset = 5;
-            SearchHistory.delete();
+            hist.delete();
             String searchTxt = "search text";
             for (int i = 0; i < HIST_MAX + offset; i++) {
-                SearchHistory.persist(new SearchDataModel(searchTxt + i));
+                hist.persist(new CachedSearchData(searchTxt + i));
             }
-            List<String> list = SearchHistory.retrieveRaw();
+            List<String> list = hist.retrieveRaw();
 
             Assert.assertEquals("search text" + (HIST_MAX + offset - 1) + ",,", list.get(0));
             Assert.assertEquals("search text" + offset + TOKEN + TOKEN, list.get(HIST_MAX - 1));
@@ -96,15 +101,16 @@ public final class SearchCacheTest {
 
     @Test
     public void retrieveMarshalledSearchHistory() {
+        SearchHistory hist = new SearchHistoryStore();
         try {
-            SearchHistory.delete();
+            hist.delete();
 
             String searchTxt1 = "search text1", searchLoc1 = "temp1", searchTyp1 = "*.txt1";
             String searchTxt2 = "search text2", searchLoc2 = "temp2", searchTyp2 = "*.txt2";
-            SearchHistory.persist(new SearchDataModel(searchTxt1, searchLoc1, searchTyp1));
-            SearchHistory.persist(new SearchDataModel(searchTxt2, searchLoc2, searchTyp2));
+            hist.persist(new CachedSearchData(searchTxt1, searchLoc1, searchTyp1));
+            hist.persist(new CachedSearchData(searchTxt2, searchLoc2, searchTyp2));
 
-            List<SearchDataModel> list = SearchHistory.retrieve();
+            List<CachedSearchData> list = hist.retrieve();
 
             Assert.assertEquals(list.get(1).getSearchText(), searchTxt1);
             Assert.assertEquals(list.get(1).getSearchLocation(), searchLoc1);
@@ -114,7 +120,7 @@ public final class SearchCacheTest {
             Assert.assertEquals(list.get(0).getSearchLocation(), searchLoc2);
             Assert.assertEquals(list.get(0).getSearchFileTypes(), searchTyp2);
 
-            SearchHistory.persist(new SearchDataModel(searchTxt1, searchLoc1, searchTyp1));
+            hist.persist(new CachedSearchData(searchTxt1, searchLoc1, searchTyp1));
 
         } catch (IOException ioe) {
             Assert.fail();
@@ -123,9 +129,10 @@ public final class SearchCacheTest {
 
     @Test
     public void testMostRecentNullIsReturned() {
+        SearchHistory hist = new SearchHistoryStore();
         try {
-            SearchHistory.delete();
-            SearchDataModel last = SearchHistory.retrievePrev(0);
+            hist.delete();
+            CachedSearchData last = hist.retrievePrev(0);
             Assert.assertNull(last);
 
         } catch (IOException ioe) {
@@ -135,16 +142,17 @@ public final class SearchCacheTest {
 
     @Test
     public void testMostRecentIsReturned() {
+        SearchHistory hist = new SearchHistoryStore();
         try {
             String str1 = "search text 1", str2 = "search text 2", str3 = "search text 3";
-            SearchHistory.delete();
-            SearchHistory.persist(new SearchDataModel(str1));
-            SearchHistory.persist(new SearchDataModel(str2));
-            SearchHistory.persist(new SearchDataModel(str3));
+            hist.delete();
+            hist.persist(new CachedSearchData(str1));
+            hist.persist(new CachedSearchData(str2));
+            hist.persist(new CachedSearchData(str3));
 
-            Assert.assertEquals(str3, SearchHistory.retrievePrev(0).getSearchText());
-            Assert.assertEquals(str2, SearchHistory.retrievePrev(1).getSearchText());
-            Assert.assertEquals(str1, SearchHistory.retrievePrev(2).getSearchText());
+            Assert.assertEquals(str3, hist.retrievePrev(0).getSearchText());
+            Assert.assertEquals(str2, hist.retrievePrev(1).getSearchText());
+            Assert.assertEquals(str1, hist.retrievePrev(2).getSearchText());
 
         } catch (IOException ioe) {
             Assert.fail();
@@ -153,9 +161,10 @@ public final class SearchCacheTest {
 
     @Test
     public void deleteWhenNoFilePresent() {
+        SearchHistory hist = new SearchHistoryStore();
         try {
-            SearchHistory.delete();
-            SearchHistory.delete();
+            hist.delete();
+            hist.delete();
         } catch (IOException ioe) {
             Assert.fail();
         }
@@ -163,9 +172,10 @@ public final class SearchCacheTest {
 
     @Test
     public void retrieveWhenNoFilePresent() {
+        SearchHistory hist = new SearchHistoryStore();
         try {
-            SearchHistory.delete();
-            List<String> ll = SearchHistory.retrieveRaw();
+            hist.delete();
+            List<String> ll = hist.retrieveRaw();
             Assert.assertEquals(0, ll.size());
 
         } catch (IOException ioe) {

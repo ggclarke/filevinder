@@ -21,7 +21,7 @@ package org.filevinder.ui.usecase;
  *
  * @author Gregory Clarke
  */
-public final class SysPropsProvider {
+public class SysPropsProvider {
 
     /**
      * Returns the specified environment variable value.

@@ -42,63 +42,6 @@ public final class FSUtils {
     }
 
     /**
-     * Will search in the supplied path for other folders and return a list of
-     * them.
-     *
-     * @param pathContext The path context
-     * @return a list containing folders in the specified context
-     */
-    public static SortedSet<String> foldersInCurrentPath(final String pathContext) {
-
-        SortedSet<String> folders = new TreeSet<String>();
-        if (pathContext == null) {
-            return folders;
-        }
-
-        File file;
-        if (getPathNoEndSeparator(pathContext).length() == 0) { //check if root path
-            file = new File("/");
-        } else {
-            file = new File(getFullPathNoEndSeparator(pathContext));
-        }
-
-        if (file.exists()) {
-            File[] directories = file.listFiles(File::isDirectory);
-            for (File f : directories) {
-                folders.add(f.getName());
-            }
-        }
-
-        return folders;
-    }
-
-    /**
-     * Works out the partial folder name entered by the user.
-     *
-     * @param path The full path String
-     * @return The partial folder name
-     */
-    public static String partialFolderName(final String path) {
-        String str = getFullPathNoEndSeparator(path);
-        str = path.replace(str, "");
-        String prefix = getPrefix(str);
-        return str.replace(prefix, "");
-    }
-
-    /**
-     * Will complete a partial path.
-     * @param path path string
-     * @param result the completed path
-     * @return the path
-     */
-    public static String autoCompletePath(final String path, final String result) {
-        String autoCompleteVal = FilenameUtils.getFullPathNoEndSeparator(path);
-        autoCompleteVal = autoCompleteVal + File.separator + result;
-        out.println("Auto complete path: " + autoCompleteVal);
-        return autoCompleteVal;
-    }
-
-    /**
      * Identifies the file type.
      *
      * @param file The file for which the type is desired.

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.interactor.utils;
+package org.filevinder.ui.fs;
 
+import org.filevinder.ui.usecase.CachedSearchData;
 import org.filevinder.ui.usecase.SysPropsProvider;
-import org.filevinder.ui.presentation.SearchDataModel;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -29,13 +29,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.filevinder.interfaces.SysProps;
-import static org.filevinder.ui.presentation.SearchDataModel.TOKEN;
+import static org.filevinder.ui.usecase.CachedSearchData.TOKEN;
+import org.filevinder.ui.usecase.SearchHistory;
 
 /**
  *
  * @author Gregory Clarke
  */
-public final class SearchHistory {
+public final class SearchHistoryStore implements SearchHistory {
 
     private static final Charset CH_SET = StandardCharsets.UTF_8;
     private static final String NL = "\n";
@@ -45,16 +46,14 @@ public final class SearchHistory {
      */
     public static final int HIST_MAX = 10;
 
-    private SearchHistory() {
-    }
-
     /**
      * Persist a search to the cache of past searches.
      *
      * @param searchData a past search
      * @throws IOException IO exceptions
      */
-    public static synchronized void persist(final SearchDataModel searchData) throws IOException {
+    @Override
+    public synchronized void persist(final CachedSearchData searchData) throws IOException {
         Path path = getFile();
 
         Files.write(path,
@@ -69,7 +68,8 @@ public final class SearchHistory {
      *
      * @throws IOException IO exception
      */
-    public static void delete() throws IOException {
+    @Override
+    public void delete() throws IOException {
         Path path = getFile();
         if (Files.exists(path)) {
             Files.delete(path);
@@ -82,7 +82,8 @@ public final class SearchHistory {
      * @return list of searches
      * @throws IOException IO exceptions
      */
-    public static List<String> retrieveRaw() throws IOException {
+    @Override
+    public List<String> retrieveRaw() throws IOException {
         List<String> res = read();
         Collections.reverse(res);
         return res;
@@ -94,12 +95,13 @@ public final class SearchHistory {
      * @return list of searches
      * @throws IOException IO exceptions
      */
-    public static List<SearchDataModel> retrieve() throws IOException {
+    @Override
+    public List<CachedSearchData> retrieve() throws IOException {
         List<String> res = retrieveRaw();
-        ArrayList<SearchDataModel> resObj = new ArrayList<>(res.size());
+        ArrayList<CachedSearchData> resObj = new ArrayList<>(res.size());
         for (String s : res) {
             String[] stringArr = s.split(TOKEN, -1);
-            SearchDataModel data = new SearchDataModel(stringArr[0], stringArr[1], stringArr[2]);
+            CachedSearchData data = new CachedSearchData(stringArr[0], stringArr[1], stringArr[2]);
             resObj.add(data);
         }
         return resObj;
@@ -112,13 +114,14 @@ public final class SearchHistory {
      * @throws IOException IO exceptions
      * @param pos specifies how many searches back
      */
-    public static SearchDataModel retrievePrev(final int pos) throws IOException {
+    @Override
+    public CachedSearchData retrievePrev(final int pos) throws IOException {
         List<String> res = retrieveRaw();
         if (!isValidPos(pos)) {
             return null;
         }
         String[] stringArr = res.get(pos).split(TOKEN, -1);
-        return new SearchDataModel(stringArr[0], stringArr[1], stringArr[2]);
+        return new CachedSearchData(stringArr[0], stringArr[1], stringArr[2]);
     }
 
     /**
@@ -128,14 +131,14 @@ public final class SearchHistory {
      * @throws IOException IO exceptions
      * @param pos specifies how many searches back
      */
-    public static boolean isValidPos(final int pos) throws IOException {
+    @Override
+    public boolean isValidPos(final int pos) throws IOException {
         List<String> res = retrieveRaw();
-        if ((res.size() <= 0)
-                || (pos >= res.size())
-                || (pos < 0)) {
+        if ((res.size() <= 0) || (pos >= res.size()) || (pos < 0)) {
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
     private static List<String> read() throws IOException {
@@ -168,7 +171,7 @@ public final class SearchHistory {
 
         StringBuilder txt = new StringBuilder();
         for (int i = start; i < lines.size(); i++) {
-            txt.append(lines.get(i) + NL);
+            txt.append(lines.get(i)).append(NL);
         }
         return txt.toString();
     }

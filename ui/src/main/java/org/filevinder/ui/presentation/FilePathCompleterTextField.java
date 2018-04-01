@@ -33,9 +33,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import static org.filevinder.ui.interactor.utils.FSUtils.autoCompletePath;
-import static org.filevinder.ui.interactor.utils.FSUtils.foldersInCurrentPath;
-import static org.filevinder.ui.interactor.utils.FSUtils.partialFolderName;
 
 /**
  * This class is a TextField which implements an "autocomplete" functionality,
@@ -50,9 +47,9 @@ import static org.filevinder.ui.interactor.utils.FSUtils.partialFolderName;
  * By default the pattern matching is not case-sensitive. This behaviour is
  * defined by the {@link #caseSensitive caseSensitive}
  * .<p>
- *
- * The AutoCompleteTextField also has a List of
- * {@link #filteredEntries filteredEntries} that is equal to the search results
+
+ The FilePathCompleterTextField also has a List of
+ {@link #filteredEntries filteredEntries} that is equal to the search results
  * if search results are not empty, or {@link #filteredEntries filteredEntries}
  * is equal to {@link #popupEntries menuEntries} otherwise. If
  * {@link #popupHidden popupHidden} is set to true no popup is going to be
@@ -60,16 +57,18 @@ import static org.filevinder.ui.interactor.utils.FSUtils.partialFolderName;
  * ListView for example) in the following way:
  * <pre>
  * <code>
- * AutoCompleteTextField auto = new AutoCompleteTextField(menuEntries);
- * auto.setPopupHidden(true);
- * SimpleListProperty filteredEntries = new SimpleListProperty(auto.getFilteredEntries());
- * listView.itemsProperty().bind(filteredEntries);
- * </code>
+ FilePathCompleterTextField auto = new FilePathCompleterTextField(menuEntries);
+ auto.setPopupHidden(true);
+ SimpleListProperty filteredEntries = new SimpleListProperty(auto.getFilteredEntries());
+ listView.itemsProperty().bind(filteredEntries);
+ </code>
  * </pre>
  *
  * @author Gregory Clarke
  */
-final class AutoCompleteTextField extends TextField {
+final class FilePathCompleterTextField extends TextField {
+
+    private static final int DEFAULT_MAX_ENTRIES = 10;
 
     /**
      * The existing auto complete menuEntries.
@@ -118,13 +117,16 @@ final class AutoCompleteTextField extends TextField {
      */
     private int maxEntries;
 
+    private FilesUtil filesUtil;
+
     /**
      * Construct a new AutoCompleteTextField.
      * @param entrySet the entry set
      */
-    public AutoCompleteTextField(final SortedSet<String> entrySet) {
+    FilePathCompleterTextField(final SortedSet<String> entrySet, final FilesUtil fsu) {
         super();
-        this.maxEntries = 10;
+        this.filesUtil = fsu;
+        this.maxEntries = DEFAULT_MAX_ENTRIES;
         this.filteredEntries = FXCollections.observableArrayList();
 
         this.popupEntries = (entrySet == null ? new TreeSet<>() : entrySet);
@@ -152,7 +154,7 @@ final class AutoCompleteTextField extends TextField {
      */
     private void buildContextPopupMenu(final List<String> searchResult, final String textArg) {
 
-        String text = partialFolderName(textArg);
+        String text = filesUtil.partialFolderName(textArg);
         List<CustomMenuItem> menuItems = new LinkedList<>();
         int count = Math.min(searchResult.size(), getMaxEntries());
         for (int i = 0; i < count; i++) {
@@ -189,7 +191,7 @@ final class AutoCompleteTextField extends TextField {
         item.setOnAction(
                 (ActionEvent event) -> {
                     out.println("Setting text on " + this.getClass().getName());
-                    String newText = autoCompletePath(textArg, result);
+                    String newText = filesUtil.autoCompletePath(textArg, result);
                     setText(newText);
                     requestFocus();
                     this.positionCaret(newText.length());
@@ -224,8 +226,8 @@ final class AutoCompleteTextField extends TextField {
                 String text = getText();
 
                 //update menuEntries based on current folder
-                popupEntries = foldersInCurrentPath(text);
-                String partialPath = partialFolderName(text);
+                popupEntries = filesUtil.foldersInCurrentPath(text);
+                String partialPath = filesUtil.partialFolderName(text);
 
                 for (String entry : popupEntries) {
                     if (entry.contains(partialPath)) {
@@ -241,7 +243,7 @@ final class AutoCompleteTextField extends TextField {
                     if (!isPopupHidden()) {
                         buildContextPopupMenu(searchResult, text);
                         if (!popupMenu.isShowing()) {
-                            popupMenu.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
+                            popupMenu.show(FilePathCompleterTextField.this, Side.BOTTOM, 0, 0);
                         }
                     }
                 } else {

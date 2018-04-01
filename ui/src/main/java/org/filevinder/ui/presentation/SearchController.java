@@ -16,7 +16,6 @@
  */
 package org.filevinder.ui.presentation;
 
-import org.filevinder.ui.usecase.SearchInteractor;
 import org.filevinder.ui.IOData;
 
 /**
@@ -55,7 +54,7 @@ public final class SearchController {
      */
     public void prev() {
         IOData inputData = new IOData();
-        inputData.putProperty("searchTextProperty", model.searchTextProperty().getValue());
+        inputData.putProperty("searchText", model.searchTextProperty().getValue());
         inputData.putProperty("prevSearchPos", Integer.toString(model.getPrevSearchPos()));
         interactor.prev(inputData);
     }

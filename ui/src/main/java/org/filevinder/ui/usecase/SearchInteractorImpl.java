@@ -16,6 +16,7 @@
  */
 package org.filevinder.ui.usecase;
 
+import org.filevinder.ui.presentation.SearchPresenter;
 import java.io.IOException;
 import static java.lang.System.err;
 import static java.lang.System.out;
@@ -29,8 +30,6 @@ import java.util.stream.Collectors;
 import org.filevinder.factory.SearchFactory;
 import org.filevinder.interfaces.Search;
 import org.filevinder.ui.UIConstants;
-import org.filevinder.ui.interactor.utils.SearchHistory;
-import static org.filevinder.ui.interactor.utils.SearchHistory.isValidPos;
 import org.filevinder.ui.UIException;
 import static org.filevinder.ui.UIConstants.DATE_FORMAT;
 import org.filevinder.ui.interactor.utils.FSUtils;
@@ -38,6 +37,7 @@ import org.filevinder.ui.IOData;
 import static org.filevinder.ui.UIConstants.SEARCH_FILE_TYPES_DEFAULT;
 import static org.filevinder.ui.UIConstants.SEARCH_LOCATION_DEFAULT;
 import static org.filevinder.ui.UIConstants.SEARCH_TEXT_DEFAULT;
+import org.filevinder.ui.presentation.SearchInteractor;
 
 /**
  * Static actions called by command features on the UI. The interactor is called
@@ -45,17 +45,22 @@ import static org.filevinder.ui.UIConstants.SEARCH_TEXT_DEFAULT;
  *
  * @author Gregory Clarke
  */
-public final class SearchInteractor {
+public final class SearchInteractorImpl implements SearchInteractor {
 
     private final SearchPresenter presenter;
+    private final SearchHistory hist;
+    private static final int KB_DIVISOR = 1000;
 
     /**
      * The interactor server as a bridge between the UI layer and the BL Layer.
      *
      * @param presenterArg The presenter
+     * @param searchHistory Cached searches
      */
-    public SearchInteractor(final SearchPresenter presenterArg) {
+    public SearchInteractorImpl(final SearchPresenter presenterArg,
+            final SearchHistory searchHistory) {
         presenter = presenterArg;
+        hist = searchHistory;
     }
 
     /**
@@ -63,6 +68,7 @@ public final class SearchInteractor {
      *
      * @param inputData The input data structure
      */
+    @Override
     public void search(final IOData inputData) {
         Search search = SearchFactory.getInstance();
 
@@ -98,8 +104,9 @@ public final class SearchInteractor {
      *
      * @param inputData The input data structure
      */
+    @Override
     public void prev(final IOData inputData) {
-        String search = inputData.getProperty("searchTextProperty");
+        String search = inputData.getProperty("searchText");
         int searchPos = Integer.parseInt(inputData.getProperty("prevSearchPos"));
 
         try {
@@ -107,7 +114,7 @@ public final class SearchInteractor {
 
             if (searchPos == 0 && isEmpty(search)) {
                 newPos = searchPos;
-            } else if (isValidPos(newPos)) {
+            } else if (hist.isValidPos(newPos)) {
                 IOData outputData = new IOData();
                 outputData.putProperty("prevSearchPos", Integer.toString(newPos));
             } else {
@@ -128,12 +135,13 @@ public final class SearchInteractor {
      *
      * @param inputData The input data structure
      */
+    @Override
     public void next(final IOData inputData) {
         int searchPos = Integer.parseInt(inputData.getProperty("prevSearchPos"));
 
         try {
             int newPos = searchPos - 1;
-            if (SearchHistory.isValidPos(newPos)) {
+            if (hist.isValidPos(newPos)) {
                 IOData outputData = new IOData();
                 outputData.putProperty("prevSearchPos", Integer.toString(newPos));
                 presenter.presentNext(outputData);
@@ -153,13 +161,14 @@ public final class SearchInteractor {
     /**
      * Action that gets invoked when the search button is pressed.
      */
+    @Override
     public void clear() {
         IOData outputData = new IOData();
         out.println("'Clear' button pressed");
 
         outputData.putProperty("searchLocation", SEARCH_LOCATION_DEFAULT);
         outputData.putProperty("searchFileTypes", SEARCH_FILE_TYPES_DEFAULT);
-        outputData.putProperty("searchTextProperty", SEARCH_TEXT_DEFAULT);
+        outputData.putProperty("searchText", SEARCH_TEXT_DEFAULT);
 
         presenter.presentClear(outputData);
     }
@@ -167,7 +176,7 @@ public final class SearchInteractor {
     private void setSearchData(final int searchPos) throws IOException, UIException {
 
         IOData outputData = new IOData();
-        SearchDataModel searchData = SearchHistory.retrievePrev(searchPos);
+        CachedSearchData searchData = hist.retrievePrev(searchPos);
 
         if (searchData == null) {
             throw new UIException("Invalid search position " + searchPos);
@@ -175,7 +184,7 @@ public final class SearchInteractor {
 
         outputData.putProperty("searchLocation", searchData.getSearchLocation());
         outputData.putProperty("searchFileTypes", searchData.getSearchFileTypes());
-        outputData.putProperty("searchTextProperty", searchData.getSearchText());
+        outputData.putProperty("searchText", searchData.getSearchText());
 
         presenter.presentSearchData(outputData);
     }
@@ -185,7 +194,7 @@ public final class SearchInteractor {
 
         res.put("fileName", path.getFileName().toString());
         res.put("absolutePath", path.toAbsolutePath().toString());
-        res.put("file", path.toFile().length() / 1000 + "kB");
+        res.put("file", path.toFile().length() / KB_DIVISOR + "kB");
         res.put("fileType", FSUtils.getFileType(path.toFile()));
         res.put("lastModified", (new SimpleDateFormat(DATE_FORMAT)).format(new Date(path.toFile().lastModified())));
         res.put("creationTime", FSUtils.getCreationTime(path));
@@ -196,9 +205,9 @@ public final class SearchInteractor {
     }
 
     private void cacheSearchDetails(final String rootPath, final String glob, final String pattern) {
-        SearchDataModel searchData = new SearchDataModel(pattern, rootPath, glob);
+        CachedSearchData searchData = new CachedSearchData(pattern, rootPath, glob);
         try {
-            SearchHistory.persist(searchData);
+            hist.persist(searchData);
         } catch (IOException ioe) {
             err.println("Could not persist the last search: " + searchData.toString());
             ioe.printStackTrace();

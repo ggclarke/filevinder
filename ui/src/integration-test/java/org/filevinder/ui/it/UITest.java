@@ -16,14 +16,12 @@
  */
 package org.filevinder.ui.it;
 
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import static javafx.scene.input.MouseButton.PRIMARY;
 import javafx.stage.Stage;
 import org.filevinder.ui.Main;
-import static org.filevinder.ui.it.Constants.TEST_FOLDER1;
 import static org.junit.Assert.assertEquals;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit.ApplicationTest;

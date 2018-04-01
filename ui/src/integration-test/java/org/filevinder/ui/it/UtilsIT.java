@@ -16,12 +16,12 @@
  */
 package org.filevinder.ui.it;
 
-import org.filevinder.ui.interactor.utils.FSUtils;
 import java.util.SortedSet;
-import static org.filevinder.ui.interactor.utils.FSUtils.partialFolderName;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.filevinder.interfaces.SysProps.FV_TEST_ROOT;
+import org.filevinder.ui.fs.FilesUtilImpl;
+import org.filevinder.ui.presentation.FilesUtil;
 
 /**
  *
@@ -31,16 +31,18 @@ public final class UtilsIT {
 
     @Test
     public void testFoldersInCurrentPathFmt1() {
+        FilesUtil fsUtil = new FilesUtilImpl();
         String pathContext = System.getenv(FV_TEST_ROOT.toString());
-        SortedSet<String> set = FSUtils.foldersInCurrentPath(pathContext);
+        SortedSet<String> set = fsUtil.foldersInCurrentPath(pathContext);
         Assert.assertTrue(set.contains("testfiles1"));
         Assert.assertTrue(set.contains("testfiles2"));
     }
 
     @Test
     public void testFoldersInCurrentPathFmt2() {
+        FilesUtil fsUtil = new FilesUtilImpl();
         String pathContext = removeLastSlash(System.getenv(FV_TEST_ROOT.toString()));
-        SortedSet<String> set = FSUtils.foldersInCurrentPath(pathContext);
+        SortedSet<String> set = fsUtil.foldersInCurrentPath(pathContext);
         Assert.assertTrue(set.contains("testfiles"));
         Assert.assertTrue(set.contains("eng"));
         Assert.assertTrue(set.contains("ui"));
@@ -48,35 +50,40 @@ public final class UtilsIT {
 
     @Test
     public void testFoldersInCurrentPathFmt3() {
+        FilesUtil fsUtil = new FilesUtilImpl();
         String pathContext = toBackSlash(System.getenv(FV_TEST_ROOT.toString()));
-        SortedSet<String> set = FSUtils.foldersInCurrentPath(pathContext);
+        SortedSet<String> set = fsUtil.foldersInCurrentPath(pathContext);
         Assert.assertTrue(set.contains("testfiles1"));
         Assert.assertTrue(set.contains("testfiles2"));
     }
 
     @Test
     public void testFoldersInCurrentPathFmt4() {
+        FilesUtil fsUtil = new FilesUtilImpl();
         String pathContext = "c:\\";
-        SortedSet<String> set = FSUtils.foldersInCurrentPath(pathContext);
+        SortedSet<String> set = fsUtil.foldersInCurrentPath(pathContext);
         Assert.assertTrue(set.contains("Windows"));
     }
 
     @Test
     public void testFoldersInCurrentPathFmt5() {
+        FilesUtil fsUtil = new FilesUtilImpl();
         String pathContext = trimLastNChars(System.getenv(FV_TEST_ROOT.toString()), 3);
-        SortedSet<String> set = FSUtils.foldersInCurrentPath(pathContext);
+        SortedSet<String> set = fsUtil.foldersInCurrentPath(pathContext);
         Assert.assertTrue(set.contains("testfiles"));
     }
 
     @Test
     public void testPartialFolderName1() {
-        String s = partialFolderName("c:\\xxx\\foo");
+        FilesUtil fsUtil = new FilesUtilImpl();
+        String s = fsUtil.partialFolderName("c:\\xxx\\foo");
         Assert.assertEquals("foo", s);
     }
 
     @Test
     public void testPartialFolderName2() {
-        String s = partialFolderName("c:/xxx/foo");
+        FilesUtil fsUtil = new FilesUtilImpl();
+        String s = fsUtil.partialFolderName("c:/xxx/foo");
         Assert.assertEquals("foo", s);
     }
 

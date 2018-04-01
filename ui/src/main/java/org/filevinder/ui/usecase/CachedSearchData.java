@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.filevinder.ui.presentation;
+package org.filevinder.ui.usecase;
 
 /**
  *
  * @author Gregory Clarke
  */
-public class SearchDataModel {
+public class CachedSearchData {
 
     /**
      * Field separator used in the cache file.
@@ -34,7 +34,7 @@ public class SearchDataModel {
      *
      * @param searchTextVal a search string
      */
-    public SearchDataModel(final String searchTextVal) {
+    public CachedSearchData(final String searchTextVal) {
         searchText = searchTextVal;
     }
 
@@ -45,7 +45,7 @@ public class SearchDataModel {
      * @param searchLocationVal a search location string
      * @param searchFileTypesVal a search file types string
      */
-    public SearchDataModel(final String searchTextVal,
+    public CachedSearchData(final String searchTextVal,
             final String searchLocationVal,
             final String searchFileTypesVal) {
 

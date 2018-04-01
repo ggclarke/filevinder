@@ -34,10 +34,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import static org.filevinder.ui.UIConstants.WINDOW_HEIGHT;
 import static org.filevinder.ui.UIConstants.WINDOW_WIDTH;
-import org.filevinder.ui.usecase.SearchInteractor;
-import org.filevinder.ui.usecase.SearchPresenter;
+import org.filevinder.ui.fs.SearchHistoryStore;
+import org.filevinder.ui.presentation.FilesUtil;
+import org.filevinder.ui.usecase.SearchInteractorImpl;
+import org.filevinder.ui.presentation.SearchPresenter;
 import org.filevinder.ui.presentation.SearchView;
 import org.filevinder.ui.presentation.SearchController;
+import org.filevinder.ui.usecase.SearchHistory;
 
 /**
  * The main Main is value bound to the model and invokes the controller.
@@ -48,18 +51,21 @@ public final class Main extends Application {
 
     private SearchModel searchModel;
     private SearchController searchController;
-    private SearchInteractor searchInteractor;
+    private SearchInteractorImpl searchInteractor;
     private SearchView searchView;
     private SearchPresenter searchPresenter;
+    private SearchHistory searchHistory;
+    private FilesUtil filesUtil;
 
     @Override
     public void start(final Stage primaryStage) {
 
-        searchPresenter = new SearchPresenter();
         searchModel = new SearchModel();
-        searchInteractor = new SearchInteractor(searchPresenter);
+        searchPresenter = new SearchPresenter(searchModel);
+        searchHistory = new SearchHistoryStore();
+        searchInteractor = new SearchInteractorImpl(searchPresenter, searchHistory);
         searchController = new SearchController(searchModel, searchInteractor);
-        searchView = new SearchView(searchModel, searchController);
+        searchView = new SearchView(searchModel, searchController, filesUtil);
 
         Scene scene = setTheScene(primaryStage);
         primaryStage.setScene(scene);

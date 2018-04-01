@@ -35,7 +35,7 @@ final class SearchResultModel {
     private final StringProperty accessed;
     private final StringProperty permission;
 
-    public SearchResultModel(final String nameVal, final String pathVal, final String sizeVal,
+    SearchResultModel(final String nameVal, final String pathVal, final String sizeVal,
             final String typeVal, final String modifiedVal, final String createdVal,
             final String accessedVal, final String permissionVal) {
         this.name = new SimpleStringProperty(nameVal);
