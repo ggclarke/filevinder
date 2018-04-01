@@ -34,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import static org.filevinder.ui.UIConstants.WINDOW_HEIGHT;
 import static org.filevinder.ui.UIConstants.WINDOW_WIDTH;
+import org.filevinder.ui.fs.FilesUtilImpl;
 import org.filevinder.ui.fs.SearchHistoryStore;
 import org.filevinder.ui.presentation.FilesUtil;
 import org.filevinder.ui.usecase.SearchInteractorImpl;
@@ -49,24 +50,29 @@ import org.filevinder.ui.usecase.SearchHistory;
  */
 public final class Main extends Application {
 
-    private SearchModel searchModel;
-    private SearchController searchController;
-    private SearchInteractorImpl searchInteractor;
-    private SearchView searchView;
-    private SearchPresenter searchPresenter;
-    private SearchHistory searchHistory;
-    private FilesUtil filesUtil;
+    private final SearchModel searchModel;
+    private final SearchController searchController;
+    private final SearchInteractorImpl searchInteractor;
+    private final SearchView searchView;
+    private final SearchPresenter searchPresenter;
+    private final SearchHistory searchHistory;
+    private final FilesUtil filesUtil;
 
-    @Override
-    public void start(final Stage primaryStage) {
-
+    /**
+     * Initialise he various UI components.
+     */
+    public Main() {
+        filesUtil = new FilesUtilImpl();
         searchModel = new SearchModel();
         searchPresenter = new SearchPresenter(searchModel);
         searchHistory = new SearchHistoryStore();
         searchInteractor = new SearchInteractorImpl(searchPresenter, searchHistory);
         searchController = new SearchController(searchModel, searchInteractor);
         searchView = new SearchView(searchModel, searchController, filesUtil);
+    }
 
+    @Override
+    public void start(final Stage primaryStage) {
         Scene scene = setTheScene(primaryStage);
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -51,6 +51,11 @@ public final class SearchPresenter {
 
         ArrayList<HashMap<String, String>> searchResults = outputData.getTable("searchResults");
 
+        if (searchResults == null) {
+            System.out.println("No results Found.");
+            return;
+        }
+
         for (HashMap<String, String> row : searchResults) {
             String fileName = row.get("fileName");
             String absolutePath = row.get("absolutePath");
@@ -60,15 +65,17 @@ public final class SearchPresenter {
             String creationTime = row.get("creationTime");
             String accessedTime = row.get("accessedTime");
             String permissions = row.get("permissions");
+
             model.getSearchResults().add(
                     new SearchResultModel(fileName, absolutePath, file, fileType,
-                        lastModified, creationTime, accessedTime, permissions)
-                );
+                            lastModified, creationTime, accessedTime, permissions)
+            );
         }
     }
 
     /**
      * Populates the UI with search data.
+     *
      * @param outputData iodata
      */
     public void presentSearchData(final IOData outputData) {

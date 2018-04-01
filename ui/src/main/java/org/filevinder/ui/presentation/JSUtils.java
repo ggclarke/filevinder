@@ -29,6 +29,11 @@ final class JSUtils {
     }
 
     public static String jsClean(final String str) {
+
+        if (str == null) {
+            return str;
+        }
+
         String clean = str.replace("'", "\\'");
         clean = clean.replace(System.getProperty("line.separator"), "\\n");
         clean = clean.replace("\n", "\\n");
@@ -36,7 +41,7 @@ final class JSUtils {
         return clean;
     }
 
-    public static String loadFile(Class clazz) {
+    public static String loadFile(final Class clazz) {
         String str = "";
         try {
             InputStream in = clazz.getClassLoader()

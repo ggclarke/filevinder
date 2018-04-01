@@ -24,7 +24,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Gregory Clarke
  */
-final class SearchResultModel {
+public class SearchResultModel {
 
     private final StringProperty name;
     private final StringProperty path;
@@ -51,112 +51,112 @@ final class SearchResultModel {
     /**
      * @return the name
      */
-    public  String getName() {
+    public final String getName() {
         return name.get();
     }
 
     /**
      * @param nameVal the name to set
      */
-    public void setName(final String nameVal) {
+    public final void setName(final String nameVal) {
         name.set(nameVal);
     }
 
     /**
      * @return the path
      */
-    public String getPath() {
+    public final String getPath() {
         return path.get();
     }
 
     /**
      * @param pathVal the path to set
      */
-    public void setPath(final String pathVal) {
+    public final void setPath(final String pathVal) {
         path.set(pathVal);
     }
 
     /**
      * @return the size
      */
-    public String getSize() {
+    public final String getSize() {
         return size.get();
     }
 
     /**
      * @param sizeVal the size to set
      */
-    public void setSize(final String sizeVal) {
+    public final void setSize(final String sizeVal) {
         size.set(sizeVal);
     }
 
     /**
      * @return the type
      */
-    public String getType() {
+    public final String getType() {
         return type.get();
     }
 
     /**
      * @param typeVal the type to set
      */
-    public void setType(final String typeVal) {
+    public final void setType(final String typeVal) {
         type.set(typeVal);
     }
 
     /**
      * @return the modified
      */
-    public String getModified() {
+    public final String getModified() {
         return modified.get();
     }
 
     /**
      * @param modifiedVal the modified to set
      */
-    public void setModified(final String modifiedVal) {
+    public final void setModified(final String modifiedVal) {
         modified.set(modifiedVal);
     }
 
     /**
      * @return the created
      */
-    public String getCreated() {
+    public final String getCreated() {
         return created.get();
     }
 
     /**
      * @param createdVal the created to set
      */
-    public void setCreated(final String createdVal) {
+    public final void setCreated(final String createdVal) {
         created.set(createdVal);
     }
 
     /**
      * @return the accessed
      */
-    public String getAccessed() {
+    public final String getAccessed() {
         return accessed.get();
     }
 
     /**
      * @param accessedVal the accessed to set
      */
-    public void setAccessed(final String accessedVal) {
+    public final void setAccessed(final String accessedVal) {
         accessed.set(accessedVal);
     }
 
     /**
      * @return the permission
      */
-    public String getPermission() {
+    public final String getPermission() {
         return permission.get();
     }
 
     /**
      * @param permissionVal the permission to set
      */
-    public void setPermission(final String permissionVal) {
+    public final void setPermission(final String permissionVal) {
         permission.set(permissionVal);
     }
 

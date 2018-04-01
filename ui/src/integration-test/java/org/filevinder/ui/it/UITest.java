@@ -27,9 +27,8 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit.ApplicationTest;
 
 /**
- *
+ * TestFX tests of the UI.
  * @author Gregory Clarke
- * 
  */
 public final class UITest extends ApplicationTest {
 
@@ -60,6 +59,7 @@ public final class UITest extends ApplicationTest {
         assertEquals(lookup("#prevButton").queryButton().getText(), "<");
     }
 
+    @Ignore
     @Test
     public void searchShouldReturnResults() {
 
