@@ -16,72 +16,76 @@
  */
 package org.filevinder.ui.it;
 
-import javafx.scene.Scene;
-import static javafx.scene.input.MouseButton.PRIMARY;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputControl;
 import javafx.stage.Stage;
 import org.filevinder.ui.Main;
-import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.api.FxRobot;
+import org.testfx.api.FxRobotException;
 import org.testfx.framework.junit.ApplicationTest;
 
 /**
  * TestFX tests of the UI.
+ *
  * @author Gregory Clarke
  */
 public final class UITest extends ApplicationTest {
 
+    FxRobot robot = new FxRobot();
+
+    TableView playerTable;
+    Button prevButton;
+    TextInputControl text, location, fileTypes;
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        ApplicationTest.launch(Main.class);
+    }
+
+    @Before
+    public void setUp() {
+        prevButton = lookup("#prevButton").queryButton();
+        text = lookup("#searchText").queryTextInputControl();
+        location = lookup("#searchLocation").queryTextInputControl();
+        fileTypes = lookup("#searchFileTypes").queryTextInputControl();
+    }
+
     @Override
-    public void start(final Stage primaryStage) {
-        Scene scene = (new Main()).setTheScene(primaryStage);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    public void start(Stage stage) throws Exception {
+        stage.show();
     }
 
-    @Test
-    public void shouldContainSearchButton() {
-        assertEquals(lookup("#searchButton").queryButton().getText(), "Search");
-    }
-
-    @Test
-    public void shouldContainClearButton() {
-        assertEquals(lookup("#clearButton").queryButton().getText(), "Clear");
-    }
-
-    @Test
-    public void shouldContainNextButton() {
-        assertEquals(lookup("#nextButton").queryButton().getText(), ">");
-    }
-
-    @Test
-    public void shouldContainPrevButton() {
-        assertEquals(lookup("#prevButton").queryButton().getText(), "<");
+    @Ignore
+    @Test(expected = FxRobotException.class)
+    public void clickNonexistentElement() {
+        clickOn("Nonexistent Element");
     }
 
     @Ignore
     @Test
-    public void searchShouldReturnResults() {
+    public void doSearch() {
+        clickOn("#searchText");
+        write("foo");
+        clickOn(location);
+        write("c:\\temp");
+        clickOn("#searchFileTypes");
+        write("*.txt");
+        clickOn("#searchButton");
+//        press(KeyCode.TAB);
+//        push(KeyCode.TAB);
+//        write(KeyCode.TAB);
+        clickOn(prevButton);
 
-        FxRobot robot = new FxRobot();
-        lookup("#searchText").queryTextInputControl().setText("accusamus");
-//        lookup("#searchLocation").queryTextInputControl().setText(TEST_FOLDER1);
-        lookup("#searchFileTypes").queryTextInputControl().setText("*.dat");
-
-//        Node search = lookup("#searchButton").queryButton();
-//        System.err.println(search.getTranslateX());
-//        System.out.println(search.getTranslateX());
-//        System.err.println(search.getTranslateY());
-//        moveTo(position(Pos.TOP_LEFT, 1, 2)).clickOn(PRIMARY);
-
-        moveTo(lookup("#searchButton").queryButton());
-//        clickOn();
-        clickOn(lookup("#searchButton").queryButton(), PRIMARY);
-
-//        try{wait(5000);}catch(Exception e){}        
-//        int size = lookup("#searchResultsTable").queryTableView().getItems().size();
-//        Assert.assertTrue(size > 0);
-
+//        try {
+//            Thread.sleep(5000);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

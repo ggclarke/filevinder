@@ -72,10 +72,11 @@ public final class Main extends Application {
     }
 
     @Override
-    public void start(final Stage primaryStage) {
-        Scene scene = setTheScene(primaryStage);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    public void start(final Stage stage) {
+        Scene scene = setTheScene(stage);
+        stage.setScene(scene);
+        stage.show();
+        stage.toFront();
     }
 
     /**
