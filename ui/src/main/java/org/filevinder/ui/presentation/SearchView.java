@@ -16,31 +16,29 @@
  */
 package org.filevinder.ui.presentation;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
+import javafx.util.Callback;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.SortedSet;
+
+import static org.filevinder.ui.UIConstants.*;
 import static org.filevinder.ui.presentation.JSUtils.jsClean;
 import static org.filevinder.ui.presentation.JSUtils.loadFile;
-import static org.filevinder.ui.UIConstants.GAP_S;
-import static org.filevinder.ui.UIConstants.GAP_XS;
-import static org.filevinder.ui.UIConstants.PAD_M;
 
 /**
  * The view covering all search use case features.
@@ -59,12 +57,12 @@ public final class SearchView {
     /**
      * Construct a search view object.
      *
-     * @param model The search view model
+     * @param model      The search view model
      * @param controller The search view controller
-     * @param fsUtil File System utility
+     * @param fsUtil     File System utility
      */
     public SearchView(final SearchModel model, final SearchController controller,
-            final FilesUtil fsUtil) {
+                      final FilesUtil fsUtil) {
         searchModel = model;
         searchController = controller;
         filesUtil = fsUtil;
@@ -72,6 +70,7 @@ public final class SearchView {
 
     /**
      * Returns an HBox containing the input fields for a search.
+     *
      * @return hbox layout component
      */
     public HBox addSearchFields() {
@@ -83,6 +82,7 @@ public final class SearchView {
 
     /**
      * Creates a HBox with the search results and details panes.
+     *
      * @param scene the scene
      * @return HBox returned HBox
      */
@@ -209,9 +209,28 @@ public final class SearchView {
         Label searchLocLbl = new Label("Search Location");
         searchLocLbl.setTooltip(tooltip);
         grid.add(searchLocLbl, COL_0, row);
-        SortedSet<String> prompts = new TreeSet<>();
-        prompts.add(""); //TODO: why is this needed?
-        FilePathCompleterTextField fsAutoCompleter = new FilePathCompleterTextField(prompts, filesUtil);
+        TextField fsAutoCompleter = new TextField();
+
+        new AutoCompletionTextFieldBinding(fsAutoCompleter,
+                new Callback<AutoCompletionBinding.ISuggestionRequest, Collection>() {
+
+                    @Override
+                    public Collection call(AutoCompletionBinding.ISuggestionRequest param) {
+                        String text = fsAutoCompleter.getText();
+                        LinkedList<String> searchResults = new LinkedList<>();
+                        SortedSet<String> popupEntries = filesUtil.foldersInCurrentPath(text);
+                        String partialPath = filesUtil.partialFolderName(text);
+
+                        for (String entry : popupEntries) {
+                            if (entry.contains(partialPath)) {
+                                String fullPath = filesUtil.autoCompletePath(text, entry);
+                                searchResults.add(fullPath);
+                            }
+                        }
+                        return searchResults;
+                    }
+                });
+
         fsAutoCompleter.setId("searchLocation");
         fsAutoCompleter.textProperty().bindBidirectional(searchModel.searchLocationProperty());
         grid.add(fsAutoCompleter, COL_1, row);

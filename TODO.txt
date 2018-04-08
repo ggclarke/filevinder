@@ -3,7 +3,7 @@ TODO
 Add source repo crawler
 Add max and min size to GUI
 Add err notification on search e.g. (AccessDEnied exception when searching tin c:/temp/foo)
-Replace TestFX with jabula or FX Test
+Add ome UI tests with jabula
 
 BUGS
 ----

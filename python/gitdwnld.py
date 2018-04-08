@@ -7,6 +7,44 @@ import requests
 import cmd
 
 # ---------- Module Interface Functions ----------
+"""
+
+TODO: use rate limit URI to determine call cnt
+
+https://api.github.com/rate_limit
+
+{
+    "resources": {
+        "core": {
+            "limit": 60,
+            "remaining": 57,
+            "reset": 1523176664
+        },
+        "search": {
+            "limit": 10,
+            "remaining": 10,
+            "reset": 1523173320
+        },
+        "graphql": {
+            "limit": 0,
+            "remaining": 0,
+            "reset": 1523176860
+        }
+    },
+    "rate": {
+        "limit": 60,
+        "remaining": 57,
+        "reset": 1523176664
+    }
+}
+
+
+
+Search By stars
+https://api.github.com/search/repositories?q=stars:>1&s=stars&type=Repositories
+
+
+"""
 
 
 def gitdwnld(api_url, limit, skip, file_path):
