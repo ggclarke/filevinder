@@ -2,13 +2,12 @@ TODO
 ----
 Add source repo crawler
 Add max and min size to GUI
-Add err notification on search e.g. (AccessDEnied exception when searching tin c:/temp/foo)
-Add ome UI tests with jabula
+Add err notification on search e.g. (AccessDenied exception when searching tin c:/temp/foo)
+Add some UI tests with jabula
+Add an autocomplete dropdown of file types (eg .txt, .bat etc.)
 
 BUGS
 ----
-The first time the auto complete path dropdown is used, the down arrow does not scroll into the list
-The dropdown should not show if user is not focussed on the filed (eg when back is pressed)
 
 DONE
 ----
