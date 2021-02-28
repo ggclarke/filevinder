@@ -17,7 +17,8 @@
 package org.filevinder.ui.presentation;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  *
@@ -41,18 +42,14 @@ final class JSUtils {
         return clean;
     }
 
-    public static String loadFile(final Class clazz) {
-        String str = "";
+    public static String loadFile(final String fp) {
+        String fileContent = "";
         try {
-            InputStream in = clazz.getClassLoader()
-                    .getResourceAsStream("sample/sample.java");
-            java.util.Scanner s = new java.util.Scanner(in).useDelimiter("\\A");
-            str = s.hasNext() ? s.next() : "";
-            in.close();
+            fileContent = new String(Files.readAllBytes(Paths.get(fp)));
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
 
-        return str;
+        return fileContent;
     }
 }

@@ -88,7 +88,7 @@ public final class SearchInteractorImpl implements SearchInteractor {
                 .collect(Collectors.toList());
 
         out.printf("Found matches in %s files%n", matches.size());
-        matches.forEach((path) -> out.println(path.toString()));
+        //matches.forEach((path) -> out.println(path.toString()));
 
         IOData outputData = new IOData();
         ArrayList<HashMap<String, Object>> searchResults = new ArrayList<>();

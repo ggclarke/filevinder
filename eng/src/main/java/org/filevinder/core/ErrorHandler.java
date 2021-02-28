@@ -33,6 +33,15 @@ public final class ErrorHandler {
      * @param msg The exception message
      * @param e The exception object
      */
+    public static void recordErr(final String msg) {
+        err.println(msg);
+    }
+
+    /**
+     * Will log details about the provided exception.
+     * @param msg The exception message
+     * @param e The exception object
+     */
     public static void recordErr(final String msg, final Exception e) {
         err.println(msg);
         e.printStackTrace(err);

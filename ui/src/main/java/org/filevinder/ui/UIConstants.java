@@ -75,4 +75,10 @@ public final class UIConstants {
      */
     public static final String DATE_FORMAT = "yyyy/mm/dd hh:mm:ss";
 
+
+    /**
+     * The maximum file size opened by the editor.
+     */
+    public static final long ONE_MB = 1000000, TWO_MB = 2000000,
+            FIVE_MB = 5000000, TEN_MB = 10000000, FIFTEEN_MB = 15000000;
 }

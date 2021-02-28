@@ -18,7 +18,6 @@ package org.filevinder.ui;
 
 import org.filevinder.ui.presentation.SearchModel;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -69,6 +68,7 @@ public final class Main extends Application {
         searchInteractor = new SearchInteractorImpl(searchPresenter, searchHistory);
         searchController = new SearchController(searchModel, searchInteractor);
         searchView = new SearchView(searchModel, searchController, filesUtil);
+        searchPresenter.setSearchView(searchView);
     }
 
     @Override

@@ -17,6 +17,7 @@
 package org.filevinder.ui.presentation;
 
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,9 +32,9 @@ import javafx.scene.web.WebEngine;
 import javafx.util.Callback;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.SortedSet;
 
 import static org.filevinder.ui.UIConstants.*;
@@ -53,6 +54,9 @@ public final class SearchView {
     private final SearchModel searchModel;
     private final SearchController searchController;
     private final FilesUtil filesUtil;
+    private final WebEngine engine;
+    private final CodeEditor editor;
+    private final TableView<SearchResultModel> resultsTable = new TableView<>();
 
     /**
      * Construct a search view object.
@@ -66,6 +70,8 @@ public final class SearchView {
         searchModel = model;
         searchController = controller;
         filesUtil = fsUtil;
+        editor = new CodeEditor();
+        engine = editor.webview.getEngine();
     }
 
     /**
@@ -99,9 +105,11 @@ public final class SearchView {
         TabPane tabPane = new TabPane();
 
         Tab plainTextTab = new Tab();
-        TableView<SearchResultModel> resultsTable = makePlainTextResultsTable(scene);
+        TableView<SearchResultModel> resultsTable = makeResultsTable(scene);
         resultsTable.setId("searchResultsTable");
-        plainTextTab.setText("Plain Text");
+        plainTextTab.setText("Text Files");
+        //TODO: Try this again, once the bug has been fixed in controlsfx
+        //TableFilter.forTableView(resultsTable).apply();
         plainTextTab.setContent(resultsTable);
 
         Tab compressedTab = new Tab();
@@ -115,8 +123,6 @@ public final class SearchView {
     private VBox makeCodeEditor() {
         Label title = new Label("Name: myfile.foo");
         title.setStyle("-fx-font-size: 10;");
-        final CodeEditor editor = new CodeEditor();
-        final WebEngine engine = editor.webview.getEngine();
 
         final Button undo = new Button("Undo");
         undo.setOnAction((ActionEvent actionEvent) -> {
@@ -129,15 +135,10 @@ public final class SearchView {
             editor.setSavedTxt(txt);
         });
 
-        final Button load = new Button("Load");
-        load.setOnAction((ActionEvent actionEvent) -> {
-            engine.executeScript("editor.setValue('" + jsClean(loadFile(this.getClass())) + "')");
-        });
-
         // layout the scene.
         final HBox buttonBox = new HBox();
         buttonBox.setSpacing(10);
-        buttonBox.getChildren().addAll(load, save, undo);
+        buttonBox.getChildren().addAll(save, undo);
 
         final VBox layout = new VBox();
         layout.setSpacing(10);
@@ -147,9 +148,7 @@ public final class SearchView {
         return layout;
     }
 
-    private TableView<SearchResultModel> makePlainTextResultsTable(final Scene scene) {
-
-        TableView<SearchResultModel> resultsTable = new TableView<>();
+    private TableView<SearchResultModel> makeResultsTable(final Scene scene) {
 
         TableColumn nameCol = new TableColumn("Name");
         TableColumn pathCol = new TableColumn("Path");
@@ -175,7 +174,48 @@ public final class SearchView {
         //create the table binding with the model
         resultsTable.setItems(searchModel.getSearchResults());
 
+        //set double click event on table row
+        addDoubleClickAction(resultsTable);
+
         return resultsTable;
+    }
+
+    public void refreshTable(ObservableList<SearchResultModel> results){
+        searchModel.setSearchResults(results);
+        resultsTable.setItems(searchModel.getSearchResults());
+        System.out.println("!!?? DEBUG: REFRESH-TABLE-SIZE"+searchModel.getSearchResults().size());
+        resultsTable.refresh();
+    }
+
+    private void addDoubleClickAction(TableView<SearchResultModel> resultsTable) {
+        resultsTable.setRowFactory( tv -> {
+            TableRow<SearchResultModel> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+
+                    String fPath = row.getItem().getPath();
+                    File file = new File(fPath);
+                    long fSize = file.length();
+
+                    if(fSize < ONE_MB){
+                        //Open file content in RHS pane
+                        engine.executeScript("editor.setValue('" + jsClean(loadFile(fPath)) + "')");
+
+                        //TODO: Position file over the search-match location
+                        SearchResultModel rowData = row.getItem();
+                        System.out.println(rowData);
+
+                        // XXXXX
+
+                    }else{
+                        //TODO: replae with a log
+                        System.out.println("Could not load file, it is too big");
+                    }
+
+                }
+            });
+            return row ;
+        });
     }
 
     private GridPane createSearchGrid() {

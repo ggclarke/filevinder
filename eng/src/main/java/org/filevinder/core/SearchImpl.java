@@ -26,6 +26,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.nio.charset.Charset;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import static org.filevinder.common.Utils.getFiles;
+import static org.filevinder.core.ErrorHandler.recordErr;
 import static org.filevinder.core.ErrorHandler.recordErr;
 
 /**
@@ -80,6 +82,8 @@ public final class SearchImpl implements Search {
             } else {
                 foundPat = mappedSearch(textlen, patLen, text, firstByte, pat, patlenm1);
             }
+        } catch(AccessDeniedException ade){
+            ErrorHandler.recordErr("AccessDeniedException: " + filePath);
         } catch (IOException ioe) {
             recordErr("Error retrieving files", ioe);
         }
@@ -224,7 +228,9 @@ public final class SearchImpl implements Search {
     public List<Path> findFile(final String rootPath, final String glob) {
         FileFinder fs = new FileFinder();
         try {
-            return fs.findFile(Paths.get(rootPath), glob);
+            List<Path> fPaths = fs.findFile(Paths.get(rootPath), glob);
+            fPaths.removeIf(path -> ! path.toFile().isFile());
+            return fPaths;
         } catch (IOException ioe) {
             recordErr("Error while searching for file", ioe);
             return new ArrayList<>();

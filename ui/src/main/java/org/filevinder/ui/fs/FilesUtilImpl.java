@@ -89,7 +89,7 @@ public final class FilesUtilImpl implements FilesUtil {
     public String autoCompletePath(final String path, final String result) {
         String autoCompleteVal = FilenameUtils.getFullPathNoEndSeparator(path);
         autoCompleteVal = autoCompleteVal + File.separator + result;
-        out.println("Auto complete path: " + autoCompleteVal);
+        //out.println("Auto complete path: " + autoCompleteVal);
         return autoCompleteVal;
     }
 

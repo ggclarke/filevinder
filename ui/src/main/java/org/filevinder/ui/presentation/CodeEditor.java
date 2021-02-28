@@ -17,6 +17,7 @@
 package org.filevinder.ui.presentation;
 
 import java.net.URL;
+
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
 import javafx.scene.layout.StackPane;
@@ -27,10 +28,9 @@ import netscape.javascript.JSObject;
 /**
  * A syntax highlighting code editor for JavaFX created by wrapping a CodeMirror
  * code editor in a WebView.
- *
+ * <p>
  * See http://codemirror.net for more information on using the 'codemirror'
  * editor.
- *
  */
 class CodeEditor extends StackPane {
 
@@ -48,7 +48,6 @@ class CodeEditor extends StackPane {
     /**
      * Create a new code editor.
      *
-     * @param editingCode the initial code to be edited in the code editor.
      */
     public CodeEditor() {
 
@@ -56,20 +55,20 @@ class CodeEditor extends StackPane {
 //        webview.setMinSize(400, 200);
 //        webview.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
 
-        load();
+        URL url = this.getClass().getClassLoader().getResource("editor.html");
+        load(url);
 
         getChildren().add(webview);
     }
 
-    private void load() {
-        URL url = this.getClass().getClassLoader().getResource("editor.html");
+    private void load(URL fileToLoad) {
 
         WebEngine eng = webview.getEngine();
 
         // process page loading
         eng.getLoadWorker().stateProperty().addListener(
                 (ObservableValue<? extends State> ov, State oldState,
-                        State newState) -> {
+                 State newState) -> {
                     if (newState == State.SUCCEEDED) {
                         JSObject win = (JSObject) eng.executeScript("window");
                         win.setMember("jsToJava", new JsToJavaInterface());
@@ -77,7 +76,7 @@ class CodeEditor extends StackPane {
                     }
                 });
 
-        eng.load(url.toString());
+        eng.load(fileToLoad.toString());
 
     }
 

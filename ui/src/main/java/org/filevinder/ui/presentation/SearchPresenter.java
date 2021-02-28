@@ -18,6 +18,8 @@ package org.filevinder.ui.presentation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javafx.collections.ObservableList;
 import org.filevinder.ui.IOData;
 import static org.filevinder.ui.UIConstants.SEARCH_FILE_TYPES_DEFAULT;
 import static org.filevinder.ui.UIConstants.SEARCH_LOCATION_DEFAULT;
@@ -32,6 +34,7 @@ import static org.filevinder.ui.UIConstants.SEARCH_TEXT_DEFAULT;
 public final class SearchPresenter {
 
     private final SearchModel model;
+    private SearchView view;
 
     /**
      * Populates the UI layer with data passed from the Interactor.
@@ -40,6 +43,10 @@ public final class SearchPresenter {
      */
     public SearchPresenter(final SearchModel modelArg) {
         model = modelArg;
+    }
+
+    public void setSearchView(final SearchView viewArg){
+        view = viewArg;
     }
 
     /**
@@ -56,6 +63,12 @@ public final class SearchPresenter {
             return;
         }
 
+        ObservableList<SearchResultModel> results = model.getSearchResults();
+        //TODO: fix this so that multiple searches don't append to table in UI
+        System.out.println("DEBUG-SIZE-BEFORE" + model.getSearchResults().size());
+        results.clear();
+        System.out.println("DEBUG-SIZE-AFTER" + model.getSearchResults().size());
+
         for (HashMap<String, String> row : searchResults) {
             String fileName = row.get("fileName");
             String absolutePath = row.get("absolutePath");
@@ -66,11 +79,14 @@ public final class SearchPresenter {
             String accessedTime = row.get("accessedTime");
             String permissions = row.get("permissions");
 
-            model.getSearchResults().add(
+            results.add(
                     new SearchResultModel(fileName, absolutePath, file, fileType,
                             lastModified, creationTime, accessedTime, permissions)
             );
         }
+
+        //TODO: Is this or the view object required?
+        view.refreshTable(results);
     }
 
     /**
