@@ -1,5 +1,9 @@
+// Works with Java 15.0.2 & Gradle 6.8.3
+// Requires local copy of open JFX path defined in run.bat  (https://gluonhq.com/products/javafx/)
+
 plugins {
-    id 'org.unbroken-dome.test-sets' version '1.4.4'
+    id 'org.unbroken-dome.test-sets' version '3.0.1'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 allprojects  {
@@ -12,51 +16,55 @@ allprojects  {
 
 subprojects {
     apply plugin: 'java'
-    sourceCompatibility = 1.9
-    targetCompatibility = 1.9
+    apply plugin: 'org.openjfx.javafxplugin'
+    sourceCompatibility = 15
+    targetCompatibility = 15
 
     tasks.withType(JavaCompile) {
-  	options.encoding = 'UTF-8'
+  	 options.encoding = 'UTF-8'
     }
 
-    task allInOneJar(type: Jar) {
-	manifest {
-            attributes 'Implementation-Title': 'FileVinder All-In-One',  
-        	'Implementation-Version': version,
-        	'Main-Class': 'org.filevinder.ui.Main'
-        }
-        baseName = project.name + '-all'
-        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-        with jar
-    }
+     task allInOneJar(type: Jar) {
+	 manifest {
+             attributes 'Implementation-Title': 'FileVinder All-In-One',  
+         	'Implementation-Version': version,
+         	'Main-Class': 'org.filevinder.ui.Main'
+         }
+         baseName = project.name + '-all'
+         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+         with jar
+     }
 
-    testSets {
-        integrationTest { dirName = 'integration-test' }
-    }
+     testSets {
+         integrationTest { dirName = 'integration-test' }
+     }
 
+  javafx {
+      version = "15"
+      modules = [ 'javafx.controls', 'javafx.web']
+  }
     
     repositories {
         mavenLocal()
-    
-        maven { url "http://repo.maven.apache.org/maven2" }
+        mavenCentral()
     }
 
-  integrationTest {
-    environment "FV_CLASSPATH", "C:/source/filevinder/eng/build/libs/"
-    environment "FV_INDEX_FILE_EXT", ".ffdr"
-    environment "FV_ENG_JAR", "filevinder-eng-1.0.0-SNAPSHOT.jar"
-    environment "FV_SEARCH_CLASS", "org.filevinder.core.SearchImpl"
-    environment "FV_SEARCH_CACHE_FILE", "c:/temp/fv_cache.txt"
-    environment "FV_TEST_ROOT", "c:/source/filevinder/testfiles/"
-  }
+   integrationTest {
+     environment "FV_CLASSPATH", "C:/source/filevinder/eng/build/libs/"
+     environment "FV_INDEX_FILE_EXT", ".ffdr"
+     environment "FV_ENG_JAR", "filevinder-eng-1.0.0-SNAPSHOT.jar"
+     environment "FV_SEARCH_CLASS", "org.filevinder.core.SearchImpl"
+     environment "FV_SEARCH_CACHE_FILE", "c:/temp/fv_cache.txt"
+     environment "FV_TEST_ROOT", "c:/source/filevinder/testfiles/"
+   }
 
-  test {
-    environment "FV_CLASSPATH", "C:/source/filevinder/eng/build/libs/"
-    environment "FV_INDEX_FILE_EXT", ".ffdr"
-    environment "FV_ENG_JAR", "filevinder-eng-1.0.0-SNAPSHOT.jar"
-    environment "FV_SEARCH_CLASS", "org.filevinder.core.SearchImpl"
-    environment "FV_SEARCH_CACHE_FILE", "c:/temp/fv_cache.txt"
-    environment "FV_TEST_ROOT", "c:/source/filevinder/testfiles/"
-  }
+   test {
+     environment "FV_CLASSPATH", "C:/source/filevinder/eng/build/libs/"
+     environment "FV_INDEX_FILE_EXT", ".ffdr"
+     environment "FV_ENG_JAR", "filevinder-eng-1.0.0-SNAPSHOT.jar"
+     environment "FV_SEARCH_CLASS", "org.filevinder.core.SearchImpl"
+     environment "FV_SEARCH_CACHE_FILE", "c:/temp/fv_cache.txt"
+     environment "FV_TEST_ROOT", "c:/source/filevinder/testfiles/"
+   }
 
 }
