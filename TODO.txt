@@ -9,8 +9,7 @@ Add an autocomplete dropdown of file types (eg .txt, .bat etc.)
 Move to github
 
 
-modular conversion to embed runtime & Javafx
-  - https://edencoding.com/runtime-components-error/
+modular conversion to embed runtime & Javafx & embedded runtime
 
 BUGS
 ----

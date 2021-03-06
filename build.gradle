@@ -6,6 +6,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
+
 allprojects  {
     apply plugin: 'maven'
     apply plugin: 'org.unbroken-dome.test-sets'
@@ -14,6 +15,7 @@ allprojects  {
     version = '1.0.0-SNAPSHOT'
 }
 
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'org.openjfx.javafxplugin'
@@ -21,7 +23,8 @@ subprojects {
     targetCompatibility = 15
 
     tasks.withType(JavaCompile) {
-  	 options.encoding = 'UTF-8'
+  	    options.encoding = 'UTF-8'
+        options.compilerArgs += "--add-exports=org.controlsfx.controls/impl.org.controlsfx.autocompletion=org.filevinder.ui"
     }
 
      task allInOneJar(type: Jar) {
@@ -39,10 +42,10 @@ subprojects {
          integrationTest { dirName = 'integration-test' }
      }
 
-  javafx {
-      version = "15"
-      modules = [ 'javafx.controls', 'javafx.web']
-  }
+    javafx {
+        version = "15"
+        modules = [ 'javafx.controls', 'javafx.web']
+    }
     
     repositories {
         mavenLocal()
