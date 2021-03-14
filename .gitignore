@@ -21,3 +21,5 @@ nb-configuration.xml
 .idea/workspace.xml
 .idea/
 *.class
+jdeps/
+filevinder-rt/
