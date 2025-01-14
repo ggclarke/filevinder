@@ -6,7 +6,6 @@ Add err notification on search e.g. (AccessDenied exception when searching tin c
 Add some UI tests with jabula
 Add an autocomplete dropdown of file types (eg .txt, .bat etc.)
 
-Move to github
 
 
 modular conversion to embed runtime & Javafx & embedded runtime
@@ -20,5 +19,7 @@ Upgrade to jdk 15
 Convert to Gradle
 Use codemirror as the text component
 Convert to java 9
+Move repo to github
+
 
 --
